@@ -1,3 +1,3 @@
 # wf
 
-This repo contains some custom code.
+This repo contains some custom code snippets.
