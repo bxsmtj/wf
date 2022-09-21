@@ -102,13 +102,18 @@ background-color: gray
   color: white;
 }
 
-.typed::after {
+/* custom cursor animation */
+.cursor__static::after {
+  content: "_";
+  display: inline;
+}
+
+.cursor__blink::after {
   content: "_";
   display: inline;
   animation: blink 1s infinite;
 }
 
-/* custom cursor animation */
 @keyframes blink {
   0% {
     opacity: 1;
