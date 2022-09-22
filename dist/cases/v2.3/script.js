@@ -597,7 +597,7 @@ const dataRaw = [
 	},
 ];
 
-const margin = { top: 24, right: 0, bottom: 16, left: 32 };
+let margin = { top: 24, right: 0, bottom: 16, left: 32 };
 let width;
 let height;
 let selectedIndex = 0;
