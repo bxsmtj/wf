@@ -901,6 +901,13 @@ $(document).ready(function () {
 		'wrapper__profile-alertdate'
 	);
 	let elProfileNotice = document.getElementById('wrapper__profile-notice');
+	let elProfileConclusion = document.getElementById(
+		'wrapper__profile-conclusion'
+	);
+	let elCaptionBe = document.getElementById('wrapper__caption-be');
+	let elCaptionDebt = document.getElementById('wrapper__caption-debt');
+	let elCaptionMarket = document.getElementById('wrapper__caption-market');
+	let elCaptionAuditor = document.getElementById('wrapper__caption-auditor');
 
 	elProfileName.innerText =
 		dataRaw[0].company_name + ' (' + dataRaw[0].company_ticker + ')';
@@ -909,6 +916,19 @@ $(document).ready(function () {
 	elProfileBankruptDate.innerText = dataRaw[0].bankruptcy_date;
 	elProfileAlertDate.innerText = dataRaw[0].be_alert_date;
 	elProfileNotice.innerText = dataRaw[0].be_notice + ' months';
+	elProfileConclusion.innerText = dataRaw[0].conclusion;
+	elCaptionBe.innerText = 'detected ' + dataRaw[0].be_notice + ' months';
+	elCaptionDebt.innerText = 'detected ' + dataRaw[0].debt_notice + ' months';
+	elCaptionMarket.innerText =
+		'detected ' + dataRaw[0].market_notice + ' months';
+	function getAuditorCaption(i) {
+		if ((dataRaw[i].auditor_notice = null)) {
+			return 'not detected';
+		} else {
+			return 'detected ' + dataRaw[i].auditor_notice + ' months';
+		}
+	}
+	elCaptionAuditor.innerText = getAuditorCaption(0);
 
 	$('#select-cases').change(() => {
 		selectedIndex = elSelect.value;
@@ -922,6 +942,14 @@ $(document).ready(function () {
 		elProfileBankruptDate.innerText = dataRaw[selectedIndex].bankruptcy_date;
 		elProfileAlertDate.innerText = dataRaw[selectedIndex].be_alert_date;
 		elProfileNotice.innerText = dataRaw[selectedIndex].be_notice + ' months';
+		elProfileConclusion.innerText = dataRaw[selectedIndex].conclusion;
+		elCaptionBe.innerText =
+			'detected ' + dataRaw[selectedIndex].be_notice + ' months';
+		elCaptionDebt.innerText =
+			'detected ' + dataRaw[selectedIndex].debt_notice + ' months';
+		elCaptionMarket.innerText =
+			'detected ' + dataRaw[selectedIndex].market_notice + ' months';
+		elCaptionAuditor.innerText = getAuditorCaption(selectedIndex);
 	});
 });
 
