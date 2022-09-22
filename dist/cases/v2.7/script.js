@@ -3390,12 +3390,9 @@ function drawChart(type) {
 		.nice()
 		.range([svgHeight, 0]);
 
-	let yAxis = d3
-		.axisLeft(yScale)
+	let yAxis = d3.axisLeft(yScale).tickSize(-svgWidth).tickPadding([8]);
 
-		.tickSize(-svgWidth)
-		.tickPadding([8]);
-
+	let stepValue, tickValues;
 	switch (type) {
 		case 'be':
 			yAxis.ticks(5).tickValues([0, 0.25, 0.5, 0.75, 1]);
@@ -3404,6 +3401,15 @@ function drawChart(type) {
 			yAxis.ticks(2).tickValues([0, 1]);
 			break;
 		default:
+			if (yDomainMax > 100) {
+				stepValue = 40;
+			} else if (yDomainMax > 10) {
+				stepValue = 10;
+			} else {
+				stepValue = 2;
+			}
+			tickValues = d3.range(0, yDomainMax + stepValue, stepValue);
+			yAxis.ticks(tickValues.length).tickValues(tickValues);
 	}
 	svg.append('g').call(yAxis);
 
@@ -3459,19 +3465,22 @@ function drawChart(type) {
 			let yScaleSecondary = d3
 				.scaleLinear()
 				.domain([0, 100])
-				// .nice()
 				.range([svgHeight, 0]);
 
 			let yAxisSecondary = d3
 				.axisRight(yScaleSecondary)
 				.tickSize(0)
 				.tickPadding([4]);
-			let yDomainTicks = yScale.ticks().length;
-			console.log(yDomainTicks);
+			let yDomainTicks = tickValues.length;
 
-			let stepValue = (yDomainMax - 0) / (yDomainTicks - 1),
-				tickValues = d3.range(0, yDomainMax + stepValue, stepValue);
-			yAxis.ticks(yDomainTicks).tickValues(tickValues);
+			let stepValueSecondary = (100 - 0) / (yDomainTicks - 1),
+				tickValuesSecondary = d3.range(
+					0,
+					100 + stepValueSecondary,
+					stepValueSecondary
+				);
+			console.log(tickValuesSecondary);
+			yAxisSecondary.ticks(yDomainTicks).tickValues(tickValuesSecondary);
 
 			svg
 				.append('g')
@@ -3583,6 +3592,9 @@ $(document).ready(function () {
 	function formatInt(num) {
 		return d3.format('.2')(num);
 	}
+	function getCaption(i, key) {
+		return 'detected ' + formatInt(dataRaw[i][key]) + ' months';
+	}
 
 	let elProfileName = document.getElementById('wrapper__profile-name');
 	let elProfileDebt = document.getElementById('wrapper__profile-debt');
@@ -3612,19 +3624,17 @@ $(document).ready(function () {
 	elProfileAlertDate.innerText = dataRaw[0].be_alert_date;
 	elProfileNotice.innerText = formatInt(dataRaw[0].be_notice) + ' months';
 	elProfileConclusion.innerText = dataRaw[0].conclusion;
-	elCaptionBe.innerText =
-		'detected ' + formatInt(dataRaw[0].be_notice) + ' months';
-	elCaptionDebt.innerText =
-		'detected ' + formatInt(dataRaw[0].debt_notice) + ' months';
-	elCaptionMarket.innerText =
-		'detected ' + formatInt(dataRaw[0].market_notice) + ' months';
+	elCaptionBe.innerText = getCaption(0, 'be_notice');
+	elCaptionDebt.innerText = getCaption(0, 'debt_notice');
+	elCaptionMarket.innerText = getCaption(0, 'market_notice');
 	function getAuditorCaption(i) {
 		if (dataRaw[i].auditor_notice == null) {
 			return 'not detected';
 		} else {
-			return 'detected ' + formatInt(dataRaw[i].auditor_notice) + ' months';
+			return getCaption(i, 'auditor_notice');
 		}
 	}
+
 	elCaptionAuditor.innerText = getAuditorCaption(0);
 
 	$('#select-cases').change(() => {
@@ -3641,12 +3651,9 @@ $(document).ready(function () {
 		elProfileNotice.innerText =
 			formatInt(dataRaw[selectedIndex].be_notice) + ' months';
 		elProfileConclusion.innerText = dataRaw[selectedIndex].conclusion;
-		elCaptionBe.innerText =
-			'detected ' + formatInt(dataRaw[selectedIndex].be_notice) + ' months';
-		elCaptionDebt.innerText =
-			'detected ' + formatInt(dataRaw[selectedIndex].debt_notice) + ' months';
-		elCaptionMarket.innerText =
-			'detected ' + formatInt(dataRaw[selectedIndex].market_notice) + ' months';
+		elCaptionBe.innerText = getCaption(selectedIndex, 'be_notice');
+		elCaptionDebt.innerText = getCaption(selectedIndex, 'debt_notice');
+		elCaptionMarket.innerText = getCaption(selectedIndex, 'market_notice');
 		elCaptionAuditor.innerText = getAuditorCaption(selectedIndex);
 
 		clearChart('be');
@@ -3655,7 +3662,6 @@ $(document).ready(function () {
 		clearChart('auditor');
 
 		dataCompany = dataRaw[selectedIndex].data;
-		console.log(dataCompany);
 
 		drawChart('be');
 		drawChart('debt');
@@ -3675,6 +3681,21 @@ $(window).on('load', function () {
 	drawChart('auditor');
 
 	window.addEventListener('resize', () => {
-		// todo
+		svgWidth =
+			$('#wrapper__chart-be').width() - svgMargin.left - svgMargin.right;
+		svgHeight =
+			$('#wrapper__chart-be').width() / 2 - svgMargin.top - svgMargin.bottom;
+
+		clearChart('be');
+		clearChart('debt');
+		clearChart('market');
+		clearChart('auditor');
+
+		dataCompany = dataRaw[selectedIndex].data;
+
+		drawChart('be');
+		drawChart('debt');
+		drawChart('market');
+		drawChart('auditor');
 	});
 });
