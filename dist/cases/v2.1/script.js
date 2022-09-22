@@ -658,10 +658,9 @@ $(document).ready(function () {
 
 	//
 
-	let div = document.getElementById('wrapper__chart-be');
 	const margin = { top: 24, right: 0, bottom: 16, left: 32 };
-	let width = div.clientWidth - margin.left - margin.right;
-	let height = div.clientWidth / 2 - margin.top - margin.bottom;
+	let width = $('#wrapper__chart-be').width() - margin.left - margin.right;
+	let height = $('#wrapper__chart-be').width() / 2 - margin.top - margin.bottom;
 
 	let dataCompany = dataRaw[selectedIndex].data;
 
