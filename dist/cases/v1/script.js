@@ -5,8 +5,7 @@ $(document).ready(function () {
 	const dataProfiles = [
 		{
 			id: 1,
-			profile_description:
-				'Manufacturing Company with $131M Debt, bankrupt in May 2022',
+			profile_description: 'Bankruptcy in May 2022 with $131M Debt',
 			company_name: 'Armstrong Flooring, Inc.',
 			company_ticker: 'NYSE:AFI',
 			company_debt: 131.1,
