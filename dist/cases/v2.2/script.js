@@ -597,6 +597,178 @@ const dataRaw = [
 	},
 ];
 
+const margin = { top: 24, right: 0, bottom: 16, left: 32 };
+let width;
+let height;
+let selectedIndex = 0;
+let dataCompany = dataRaw[selectedIndex].data;
+
+function drawChartBe() {
+	const data = dataCompany.map((d) => ({
+		date: d3.timeParse('%Y-%m-%d')(d.date),
+		value: d.score_prob,
+	}));
+
+	console.log(data);
+
+	let svg = d3
+		.select('#wrapper__chart-be')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	let x = d3
+		.scaleTime()
+		.domain(
+			d3.extent(data, function (d) {
+				return d.date;
+			})
+		)
+		.range([0, width]);
+	svg
+		.append('g')
+		.attr('transform', 'translate(0,' + height + ')')
+		.call(
+			d3.axisBottom(x).ticks(d3.timeYear, 1).tickFormat(d3.timeFormat('%Y'))
+		);
+
+	let y = d3.scaleLinear().domain([0, 1]).nice().range([height, 0]);
+	svg.append('g').call(d3.axisLeft(y));
+
+	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
+	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
+	svg.selectAll('.domain').attr('class', 'domain axisDomain');
+
+	svg
+		.append('path')
+		.datum(data)
+		.attr('fill', 'none')
+		.attr('stroke', '#B3B3B3')
+		.attr('stroke-width', 1)
+		.attr(
+			'd',
+			d3
+				.line()
+				.x(function (d) {
+					return x(d.date);
+				})
+				.y(function (d) {
+					return y(d.value);
+				})
+				.defined(function (d) {
+					return d.value !== null;
+				})
+		);
+
+	// svg.append('text').
+}
+
+function drawChartDebt() {
+	const data = dataCompany.map((d) => ({
+		date: d3.timeParse('%Y-%m-%d')(d.date),
+		// value: d.score_prob,
+		value: +d.debt_ebitda,
+	}));
+
+	console.log(data);
+
+	let svg = d3
+		.select('#wrapper__chart-debt')
+		.append('svg')
+		.attr('width', width + margin.left + margin.right)
+		.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	let x = d3
+		.scaleTime()
+		.domain(
+			d3.extent(data, function (d) {
+				return d.date;
+			})
+		)
+		.range([0, width]);
+	svg
+		.append('g')
+		.attr('transform', 'translate(0,' + height + ')')
+		.call(
+			d3
+				.axisBottom(x)
+				.ticks(d3.timeYear, 1)
+				.tickSize(-height)
+				.tickPadding([8])
+				.tickSizeOuter(0)
+				.tickFormat(d3.timeFormat('%Y'))
+		);
+
+	let y = d3
+		.scaleLinear()
+		.domain([
+			0,
+			d3.max(data, function (d) {
+				return +d.value;
+			}),
+		])
+		.nice()
+		.range([height, 0]);
+	svg.append('g').call(
+		d3
+			.axisLeft(y)
+			.ticks(
+				d3.max(data, function (d) {
+					return +d.value;
+				}) / 10
+			)
+			.tickSize(-width)
+			.tickPadding([8])
+	);
+
+	let line = d3
+		.line()
+		.x(function (d) {
+			return x(d.date);
+		})
+		.y(function (d) {
+			return y(d.value);
+		})
+		.defined(function (d) {
+			return d.value !== null;
+		});
+
+	let path = svg
+		.append('path')
+		.attr('d', line(data))
+		.attr('fill', 'none')
+		.attr('stroke', '#B3B3B3')
+		.attr('stroke-width', 1);
+
+	let totalLength = path.node().getTotalLength();
+
+	path
+		.attr('stroke-dasharray', totalLength + ' ' + totalLength)
+		.attr('stroke-dashoffset', totalLength)
+		.transition()
+		.duration(1000)
+		.ease(d3.easeLinear)
+		.attr('stroke-dashoffset', 0);
+
+	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
+	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
+	svg.selectAll('.domain').remove();
+
+	svg
+		.append('text')
+		.attr('text-anchor', 'start')
+		.attr('x', -margin.left)
+		.attr('y', -margin.top / 2)
+		.attr('class', 'axisLabel')
+		.text('Total Debt/EBITDA');
+}
+
+function drawChart() {}
+
 $(document).ready(function () {
 	//
 
@@ -641,7 +813,6 @@ $(document).ready(function () {
 	elProfileAlertDate.innerText = dataRaw[0].be_alert_date;
 	elProfileNotice.innerText = dataRaw[0].be_notice + ' months';
 
-	let selectedIndex = elSelect.value;
 	$('#select-cases').change(() => {
 		selectedIndex = elSelect.value;
 		elProfileName.innerText =
@@ -655,192 +826,13 @@ $(document).ready(function () {
 		elProfileAlertDate.innerText = dataRaw[selectedIndex].be_alert_date;
 		elProfileNotice.innerText = dataRaw[selectedIndex].be_notice + ' months';
 	});
+});
 
-	//
-
-	const margin = { top: 24, right: 0, bottom: 16, left: 32 };
-	let width = $('#wrapper__chart-be').width() - margin.left - margin.right;
-	let height = $('#wrapper__chart-be').width() / 2 - margin.top - margin.bottom;
-
-	let dataCompany = dataRaw[selectedIndex].data;
-
-	function drawChartBe() {
-		const data = dataCompany.map((d) => ({
-			date: d3.timeParse('%Y-%m-%d')(d.date),
-			value: d.score_prob,
-		}));
-
-		console.log(data);
-
-		let svg = d3
-			.select('#wrapper__chart-be')
-			.append('svg')
-			.attr('width', width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-		let x = d3
-			.scaleTime()
-			.domain(
-				d3.extent(data, function (d) {
-					return d.date;
-				})
-			)
-			.range([0, width]);
-		svg
-			.append('g')
-			.attr('transform', 'translate(0,' + height + ')')
-			.call(
-				d3.axisBottom(x).ticks(d3.timeYear, 1).tickFormat(d3.timeFormat('%Y'))
-			);
-
-		let y = d3.scaleLinear().domain([0, 1]).nice().range([height, 0]);
-		svg.append('g').call(d3.axisLeft(y));
-
-		svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
-		svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
-		svg.selectAll('.domain').attr('class', 'domain axisDomain');
-
-		svg
-			.append('path')
-			.datum(data)
-			.attr('fill', 'none')
-			.attr('stroke', '#B3B3B3')
-			.attr('stroke-width', 1)
-			.attr(
-				'd',
-				d3
-					.line()
-					.x(function (d) {
-						return x(d.date);
-					})
-					.y(function (d) {
-						return y(d.value);
-					})
-					.defined(function (d) {
-						return d.value !== null;
-					})
-			);
-
-		// svg.append('text').
-	}
-
-	function drawChartDebt() {
-		const data = dataCompany.map((d) => ({
-			date: d3.timeParse('%Y-%m-%d')(d.date),
-			// value: d.score_prob,
-			value: +d.debt_ebitda,
-		}));
-
-		console.log(data);
-
-		let svg = d3
-			.select('#wrapper__chart-debt')
-			.append('svg')
-			.attr('width', width + margin.left + margin.right)
-			.attr('height', height + margin.top + margin.bottom)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-		let x = d3
-			.scaleTime()
-			.domain(
-				d3.extent(data, function (d) {
-					return d.date;
-				})
-			)
-			.range([0, width]);
-		svg
-			.append('g')
-			.attr('transform', 'translate(0,' + height + ')')
-			.call(
-				d3
-					.axisBottom(x)
-					.ticks(d3.timeYear, 1)
-					.tickSize(-height)
-					.tickPadding([8])
-					.tickSizeOuter(0)
-					.tickFormat(d3.timeFormat('%Y'))
-			);
-
-		let y = d3
-			.scaleLinear()
-			.domain([
-				0,
-				d3.max(data, function (d) {
-					return +d.value;
-				}),
-			])
-			.nice()
-			.range([height, 0]);
-		svg.append('g').call(
-			d3
-				.axisLeft(y)
-				.ticks(
-					d3.max(data, function (d) {
-						return +d.value;
-					}) / 10
-				)
-				.tickSize(-width)
-				.tickPadding([8])
-		);
-
-		let line = d3
-			.line()
-			.x(function (d) {
-				return x(d.date);
-			})
-			.y(function (d) {
-				return y(d.value);
-			})
-			.defined(function (d) {
-				return d.value !== null;
-			});
-
-		let path = svg
-			.append('path')
-			.attr('d', line(data))
-			.attr('fill', 'none')
-			.attr('stroke', '#B3B3B3')
-			.attr('stroke-width', 1);
-
-		let totalLength = path.node().getTotalLength();
-
-		path
-			.attr('stroke-dasharray', totalLength + ' ' + totalLength)
-			.attr('stroke-dashoffset', totalLength)
-			.transition()
-			.duration(1000)
-			.ease(d3.easeLinear)
-			.attr('stroke-dashoffset', 0);
-
-		svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
-		svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
-		svg.selectAll('.domain').remove();
-
-		// svg
-		// 	.append('text')
-		// 	.attr('text-anchor', 'end')
-		// 	.attr('x', width)
-		// 	.attr('y', height + margin.top + 12)
-		// 	.attr('class', 'axisLabel')
-		// 	.text('X axis title');
-
-		svg
-			.append('text')
-			.attr('text-anchor', 'start')
-			// .attr('transform', 'rotate(-90)')
-			.attr('x', -margin.left)
-			.attr('y', -margin.top / 2)
-			.attr('class', 'axisLabel')
-			.text('Total Debt/EBITDA');
-	}
-
-	function drawChart() {}
+$(window).on('load', function () {
+	width = $('#wrapper__chart-be').width() - margin.left - margin.right;
+	height = $('#wrapper__chart-be').width() / 2 - margin.top - margin.bottom;
 
 	drawChartBe();
 	drawChartDebt();
-
 	drawChart();
 });
