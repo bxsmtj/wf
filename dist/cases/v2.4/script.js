@@ -597,9 +597,9 @@ const dataRaw = [
 	},
 ];
 
-let margin = { top: 24, right: 0, bottom: 16, left: 32 };
-let width;
-let height;
+let svgMargin = { top: 24, right: 0, bottom: 16, left: 32 };
+let svgWidth;
+let svgHeight;
 let selectedIndex = 0;
 let dataCompany = dataRaw[selectedIndex].data;
 
@@ -614,10 +614,13 @@ function drawChartBe() {
 	let svg = d3
 		.select('#wrapper__chart-be')
 		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
+		.attr('width', svgWidth + svgMargin.left + svgMargin.right)
+		.attr('height', svgHeight + svgMargin.top + svgMargin.bottom)
 		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		.attr(
+			'transform',
+			'translate(' + svgMargin.left + ',' + svgMargin.top + ')'
+		);
 
 	let x = d3
 		.scaleTime()
@@ -626,15 +629,15 @@ function drawChartBe() {
 				return d.date;
 			})
 		)
-		.range([0, width]);
+		.range([0, svgWidth]);
 	svg
 		.append('g')
-		.attr('transform', 'translate(0,' + height + ')')
+		.attr('transform', 'translate(0,' + svgHeight + ')')
 		.call(
 			d3.axisBottom(x).ticks(d3.timeYear, 1).tickFormat(d3.timeFormat('%Y'))
 		);
 
-	let y = d3.scaleLinear().domain([0, 1]).nice().range([height, 0]);
+	let y = d3.scaleLinear().domain([0, 1]).nice().range([svgHeight, 0]);
 	svg.append('g').call(d3.axisLeft(y));
 
 	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
@@ -677,10 +680,13 @@ function drawChartDebt() {
 	let svg = d3
 		.select('#wrapper__chart-debt')
 		.append('svg')
-		.attr('width', width + margin.left + margin.right)
-		.attr('height', height + margin.top + margin.bottom)
+		.attr('width', svgWidth + svgMargin.left + svgMargin.right)
+		.attr('height', svgHeight + svgMargin.top + svgMargin.bottom)
 		.append('g')
-		.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+		.attr(
+			'transform',
+			'translate(' + svgMargin.left + ',' + svgMargin.top + ')'
+		);
 
 	let x = d3
 		.scaleTime()
@@ -689,15 +695,15 @@ function drawChartDebt() {
 				return d.date;
 			})
 		)
-		.range([0, width]);
+		.range([0, svgWidth]);
 	svg
 		.append('g')
-		.attr('transform', 'translate(0,' + height + ')')
+		.attr('transform', 'translate(0,' + svgHeight + ')')
 		.call(
 			d3
 				.axisBottom(x)
 				.ticks(d3.timeYear, 1)
-				.tickSize(-height)
+				.tickSize(-svgHeight)
 				.tickPadding([8])
 				.tickSizeOuter(0)
 				.tickFormat(d3.timeFormat('%Y'))
@@ -712,7 +718,7 @@ function drawChartDebt() {
 			}),
 		])
 		.nice()
-		.range([height, 0]);
+		.range([svgHeight, 0]);
 	svg.append('g').call(
 		d3
 			.axisLeft(y)
@@ -721,7 +727,7 @@ function drawChartDebt() {
 					return +d.value;
 				}) / 10
 			)
-			.tickSize(-width)
+			.tickSize(-svgWidth)
 			.tickPadding([8])
 	);
 
@@ -761,8 +767,8 @@ function drawChartDebt() {
 	svg
 		.append('text')
 		.attr('text-anchor', 'start')
-		.attr('x', -margin.left)
-		.attr('y', -margin.top / 2)
+		.attr('x', -svgMargin.left)
+		.attr('y', -svgMargin.top / 2)
 		.attr('class', 'axisLabel')
 		.text('Total Debt/EBITDA');
 }
@@ -829,8 +835,9 @@ $(document).ready(function () {
 });
 
 $(window).on('load', function () {
-	width = $('#wrapper__chart-be').width() - margin.left - margin.right;
-	height = $('#wrapper__chart-be').width() / 2 - margin.top - margin.bottom;
+	svgWidth = $('#wrapper__chart-be').width() - svgMargin.left - svgMargin.right;
+	svgHeight =
+		$('#wrapper__chart-be').width() / 2 - svgMargin.top - svgMargin.bottom;
 
 	drawChartBe();
 	drawChartDebt();
