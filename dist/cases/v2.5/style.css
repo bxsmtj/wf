@@ -173,7 +173,7 @@ body {
   transform: rotate(-180deg);
 }
 
-.nice-select.open .list { /*todo*/
+.nice-select.open .list {
   opacity: 1;
   pointer-events: auto;
   -webkit-transform: scale(1) translateY(0);
@@ -181,14 +181,13 @@ body {
   transform: scale(1) translateY(0);
 }
 
-.nice-select.disabled { /*todo*/
-  border-color: #ededed;
-  color: #999;
+.nice-select.disabled {
+  color: #808080;
   pointer-events: none;
 }
 
-.nice-select.disabled:after { /*todo*/
-  border-color: #cccccc;
+.nice-select.disabled:after {
+  border-color: #808080;
 }
 
 .nice-select .list {
@@ -218,17 +217,12 @@ body {
 
 .nice-select .option {
   cursor: pointer;
-  /* font-weight: 400; */
-  /* line-height: 40px; */
   list-style: none;
-  /* min-height: 40px; */
   outline: none;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-left: 12px;
   padding-right: 12px;
-  /* padding-left: 18px; */
-  /* padding-right: 29px; */
   text-align: left;
   -webkit-transition: all 0.15s;
   transition: all 0.15s;
@@ -239,12 +233,6 @@ body {
 .nice-select .option.selected.focus {
   background-color: rgba(179, 179, 179, 0.2);
   color: #CCCCCC;
-}
-
-.nice-select .option.selected {
-  /* font-weight: bold; */
-  /* background-color: rgba(163, 194, 163, 0.2);
-  color: #E0EBE0; */
 }
 
 .nice-select .option.disabled {
@@ -293,8 +281,15 @@ body {
 .axisLabel {
   fill: #B3B3B3;
   font-family: 'Roboto Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.axisLabelSecondary {
+  fill: #808080;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
 }
 
 .axisDomain {

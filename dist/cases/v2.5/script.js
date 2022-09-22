@@ -597,147 +597,151 @@ const dataRaw = [
 	},
 ];
 
-let svgMargin = { top: 24, right: 0, bottom: 16, left: 32 };
+let svgMargin = { top: 24, right: 26, bottom: 16, left: 32 };
 let svgWidth;
 let svgHeight;
 let selectedIndex = 0;
 let dataCompany = dataRaw[selectedIndex].data;
 
-function drawChartBe() {
+function drawChart(type) {
+	// type = ['be', 'debt', 'market', 'auditor']
+
+	let value;
+	let idWrapper;
+	switch (type) {
+		case 'be':
+			value = 'score_prob';
+			idWrapper = '#wrapper__chart-be';
+			break;
+		case 'debt':
+			value = 'debt_ebitda';
+			idWrapper = '#wrapper__chart-debt';
+			break;
+		case 'market':
+			value = 'price_volatility';
+			idWrapper = '#wrapper__chart-market';
+			break;
+		case 'auditor':
+			value = 'going_concern';
+			idWrapper = '#wrapper__chart-auditor';
+			break;
+		default:
+			console.log('drawChart() Error: No type specified.');
+	}
+
 	const data = dataCompany.map((d) => ({
 		date: d3.timeParse('%Y-%m-%d')(d.date),
-		value: d.score_prob,
+		value: +d[value],
 	}));
 
-	console.log(data);
-
-	let svg = d3
-		.select('#wrapper__chart-be')
-		.append('svg')
-		.attr('width', svgWidth + svgMargin.left + svgMargin.right)
-		.attr('height', svgHeight + svgMargin.top + svgMargin.bottom)
-		.append('g')
-		.attr(
-			'transform',
-			'translate(' + svgMargin.left + ',' + svgMargin.top + ')'
-		);
-
-	let x = d3
-		.scaleTime()
-		.domain(
-			d3.extent(data, function (d) {
-				return d.date;
-			})
-		)
-		.range([0, svgWidth]);
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,' + svgHeight + ')')
-		.call(
-			d3.axisBottom(x).ticks(d3.timeYear, 1).tickFormat(d3.timeFormat('%Y'))
-		);
-
-	let y = d3.scaleLinear().domain([0, 1]).nice().range([svgHeight, 0]);
-	svg.append('g').call(d3.axisLeft(y));
-
-	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
-	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
-	svg.selectAll('.domain').attr('class', 'domain axisDomain');
-
-	svg
-		.append('path')
-		.datum(data)
-		.attr('fill', 'none')
-		.attr('stroke', '#B3B3B3')
-		.attr('stroke-width', 1)
-		.attr(
-			'd',
-			d3
-				.line()
-				.x(function (d) {
-					return x(d.date);
-				})
-				.y(function (d) {
-					return y(d.value);
-				})
-				.defined(function (d) {
-					return d.value !== null;
-				})
-		);
-
-	// svg.append('text').
-}
-
-function drawChartDebt() {
-	const data = dataCompany.map((d) => ({
-		date: d3.timeParse('%Y-%m-%d')(d.date),
-		// value: d.score_prob,
-		value: +d.debt_ebitda,
-	}));
-
-	console.log(data);
-
-	let svg = d3
-		.select('#wrapper__chart-debt')
-		.append('svg')
-		.attr('width', svgWidth + svgMargin.left + svgMargin.right)
-		.attr('height', svgHeight + svgMargin.top + svgMargin.bottom)
-		.append('g')
-		.attr(
-			'transform',
-			'translate(' + svgMargin.left + ',' + svgMargin.top + ')'
-		);
-
-	let x = d3
-		.scaleTime()
-		.domain(
-			d3.extent(data, function (d) {
-				return d.date;
-			})
-		)
-		.range([0, svgWidth]);
-	svg
-		.append('g')
-		.attr('transform', 'translate(0,' + svgHeight + ')')
-		.call(
-			d3
-				.axisBottom(x)
-				.ticks(d3.timeYear, 1)
-				.tickSize(-svgHeight)
-				.tickPadding([8])
-				.tickSizeOuter(0)
-				.tickFormat(d3.timeFormat('%Y'))
-		);
-
-	let y = d3
-		.scaleLinear()
-		.domain([
-			0,
-			d3.max(data, function (d) {
+	let yDomainMin;
+	let yDomainMax;
+	let yDomainTicks;
+	let yAxisTitle;
+	switch (type) {
+		case 'be':
+			yDomainMin = 0;
+			yDomainMax = 1;
+			yDomainTicks = 5;
+			yAxisTitle = 'b(e) Score';
+			break;
+		case 'debt':
+			yDomainMin = 0;
+			yDomainMax = d3.max(data, function (d) {
 				return +d.value;
-			}),
-		])
-		.nice()
-		.range([svgHeight, 0]);
-	svg.append('g').call(
-		d3
-			.axisLeft(y)
-			.ticks(
+			});
+			yDomainTicks =
 				d3.max(data, function (d) {
 					return +d.value;
-				}) / 10
-			)
-			.tickSize(-svgWidth)
-			.tickPadding([8])
-	);
+				}) / 10;
+			yAxisTitle = 'Total Debt to EBITDA';
+			break;
+		case 'market':
+			yDomainMin = 0;
+			yDomainMax = d3.max(data, function (d) {
+				return +d.value;
+			});
+			yDomainTicks = 6;
+			yAxisTitle = 'Price Volatility';
+			break;
+		case 'auditor':
+			yDomainMin = -0.25;
+			yDomainMax = 1.25;
+			yDomainTicks = 2;
+			yAxisTitle = 'Going Concern Doubt';
+			break;
+		default:
+			console.log('drawChart() Error: No type specified.');
+	}
+
+	let svg = d3
+		.select(idWrapper)
+		.append('svg')
+		.attr('width', svgWidth + svgMargin.left + svgMargin.right)
+		.attr('height', svgHeight + svgMargin.top + svgMargin.bottom)
+		.append('g')
+		.attr(
+			'transform',
+			'translate(' + svgMargin.left + ',' + svgMargin.top + ')'
+		);
+
+	let xScale = d3
+		.scaleTime()
+		.domain(
+			d3.extent(data, function (d) {
+				return d.date;
+			})
+		)
+		.range([0, svgWidth]);
+
+	let xAxis = d3
+		.axisBottom(xScale)
+		.ticks(d3.timeYear, 1)
+		.tickSize(-svgHeight)
+		.tickPadding([8])
+		.tickSizeOuter(0)
+		.tickFormat(d3.timeFormat('%Y'));
+
+	svg
+		.append('g')
+		.attr('transform', 'translate(0,' + svgHeight + ')')
+		.call(xAxis);
+
+	let yScale = d3
+		.scaleLinear()
+		.domain([yDomainMin, yDomainMax])
+		.nice()
+		.range([svgHeight, 0]);
+
+	let yAxis = d3
+		.axisLeft(yScale)
+		.ticks(yDomainTicks)
+		.tickSize(-svgWidth)
+		.tickPadding([8]);
+
+	switch (type) {
+		case 'be':
+			yAxis.tickValues([0, 0.25, 0.5, 0.75, 1]);
+			break;
+		case 'market':
+			let stepValue = (yDomainMax - 0) / (yDomainTicks - 1),
+				tickValues = d3.range(0, yDomainMax + stepValue, stepValue);
+			yAxis.tickValues(tickValues);
+			break;
+		case 'auditor':
+			yAxis.tickValues([0, 1]);
+			break;
+		default:
+	}
+	svg.append('g').call(yAxis);
 
 	let line = d3
 		.line()
 		.x(function (d) {
-			return x(d.date);
+			return xScale(d.date);
 		})
 		.y(function (d) {
-			return y(d.value);
+			return yScale(d.value);
 		})
 		.defined(function (d) {
 			return d.value !== null;
@@ -752,17 +756,18 @@ function drawChartDebt() {
 
 	let totalLength = path.node().getTotalLength();
 
-	path
-		.attr('stroke-dasharray', totalLength + ' ' + totalLength)
-		.attr('stroke-dashoffset', totalLength)
-		.transition()
-		.duration(1000)
-		.ease(d3.easeLinear)
-		.attr('stroke-dashoffset', 0);
-
-	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
-	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
-	svg.selectAll('.domain').remove();
+	ScrollTrigger.create({
+		trigger: idWrapper,
+		onEnter: function () {
+			path
+				.attr('stroke-dasharray', totalLength + ' ' + totalLength)
+				.attr('stroke-dashoffset', totalLength)
+				.transition()
+				.duration(1000)
+				.ease(d3.easeLinear)
+				.attr('stroke-dashoffset', 0);
+		},
+	});
 
 	svg
 		.append('text')
@@ -770,10 +775,96 @@ function drawChartDebt() {
 		.attr('x', -svgMargin.left)
 		.attr('y', -svgMargin.top / 2)
 		.attr('class', 'axisLabel')
-		.text('Total Debt/EBITDA');
-}
+		.text(yAxisTitle);
 
-function drawChart() {}
+	switch (type) {
+		case 'market':
+			const dataSecondary = dataCompany.map((d) => ({
+				date: d3.timeParse('%Y-%m-%d')(d.date),
+				value: +d.short_interest,
+			}));
+			yDomainMax = d3.max(data, function (d) {
+				return +d.value;
+			});
+			yDomainTicks =
+				d3.max(data, function (d) {
+					return +d.value;
+				}) / 20;
+			yAxisTitle = 'Price Volatility';
+			let yScaleSecondary = d3
+				.scaleLinear()
+				.domain([0, 100])
+				.nice()
+				.range([svgHeight, 0]);
+
+			let yAxisSecondary = d3
+				.axisRight(yScaleSecondary)
+				.ticks(6)
+				.tickSize(0)
+				.tickPadding([4]);
+
+			svg
+				.append('g')
+				.attr('class', 'axisLabelSecondary')
+				.attr('transform', 'translate(' + svgWidth + ', 0)')
+				.call(yAxisSecondary);
+
+			svg
+				.append('text')
+				.attr('text-anchor', 'end')
+				.attr('x', svgWidth + svgMargin.right)
+				.attr('y', -svgMargin.top / 2)
+				.attr('class', 'axisLabelSecondary')
+				.text('Short Interest');
+
+			let lineSecondary = d3
+				.line()
+				.x(function (d) {
+					return xScale(d.date);
+				})
+				.y(function (d) {
+					return yScaleSecondary(d.value);
+				})
+				.defined(function (d) {
+					return d.value !== null;
+				});
+
+			let pathSecondary = svg
+				.append('path')
+				.attr('d', line(dataSecondary))
+				.attr('fill', 'none')
+				.attr('stroke', '#808080')
+				.attr('stroke-width', 1);
+
+			let totalLengthSecondary = pathSecondary.node().getTotalLength();
+
+			ScrollTrigger.create({
+				trigger: idWrapper,
+				onEnter: function () {
+					pathSecondary
+						.attr(
+							'stroke-dasharray',
+							totalLengthSecondary + ' ' + totalLengthSecondary
+						)
+						.attr('stroke-dashoffset', totalLengthSecondary)
+						.transition()
+						.duration(1000)
+						.ease(d3.easeLinear)
+						.attr('stroke-dashoffset', 0);
+				},
+			});
+			break;
+		default:
+	}
+
+	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
+	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
+	svg
+		.selectAll('.axisLabelSecondary')
+		.selectAll('text')
+		.attr('class', 'axisLabelSecondary');
+	svg.selectAll('.domain').remove();
+}
 
 $(document).ready(function () {
 	//
@@ -839,7 +930,12 @@ $(window).on('load', function () {
 	svgHeight =
 		$('#wrapper__chart-be').width() / 2 - svgMargin.top - svgMargin.bottom;
 
-	drawChartBe();
-	drawChartDebt();
-	drawChart();
+	drawChart('be');
+	drawChart('debt');
+	drawChart('market');
+	drawChart('auditor');
+
+	window.addEventListener('resize', () => {
+		// to do
+	});
 });
