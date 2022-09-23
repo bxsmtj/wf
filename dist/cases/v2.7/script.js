@@ -3320,7 +3320,7 @@ function drawChart(type) {
 		case 'be':
 			yDomainMin = 0;
 			yDomainMax = 1;
-			yAxisTitle = 'b(e) Score';
+			yAxisTitle = 'b(e) Score [A = low risk; D = high risk]';
 			break;
 		case 'debt':
 			yDomainMin = 0;
@@ -3395,17 +3395,39 @@ function drawChart(type) {
 	let stepValue, tickValues;
 	switch (type) {
 		case 'be':
-			yAxis.ticks(5).tickValues([0, 0.25, 0.5, 0.75, 1]);
+			yAxis.ticks(5).tickValues([0, 0.25, 0.5, 0.75, 1]).tickFormat('');
+			let sectionHeight;
+			let beAxis = svg.append('g');
+			const beAxisLabels = ['D', 'C', 'B', 'A'];
+			beAxisLabels.forEach((d, i) => {
+				sectionHeight = (svgHeight / 4) * (i + 1) - svgHeight / 4 / 2 + 4;
+				beAxis
+					.append('text')
+					.attr('class', 'chartLabel')
+					.attr('x', -svgMargin.left / 2)
+					.attr('y', sectionHeight)
+					.attr('text-anchor', 'start')
+					.text(d);
+			});
 			break;
 		case 'auditor':
-			yAxis.ticks(2).tickValues([0, 1]);
+			yAxis
+				.ticks(2)
+				.tickValues([0, 1])
+				.tickFormat((d) => {
+					if (d == 0) {
+						return 'No';
+					} else {
+						return 'Yes';
+					}
+				});
 			break;
 		default:
 			if (yDomainMax > 200) {
 				stepValue = 60;
 			} else if (yDomainMax > 100) {
-				stepValue = 40;}
-				else if (yDomainMax > 10) {
+				stepValue = 40;
+			} else if (yDomainMax > 10) {
 				stepValue = 10;
 			} else {
 				stepValue = 2;
@@ -3435,19 +3457,6 @@ function drawChart(type) {
 		.attr('stroke-width', 1);
 
 	let totalLength = path.node().getTotalLength();
-
-	ScrollTrigger.create({
-		trigger: idWrapper,
-		onEnter: function () {
-			path
-				.attr('stroke-dasharray', totalLength + ' ' + totalLength)
-				.attr('stroke-dashoffset', totalLength)
-				.transition()
-				.duration(1000)
-				.ease(d3.easeLinear)
-				.attr('stroke-dashoffset', 0);
-		},
-	});
 
 	svg
 		.append('text')
@@ -3544,38 +3553,188 @@ function drawChart(type) {
 		.attr('class', 'axisLabelSecondary');
 	svg.selectAll('.domain').remove();
 
-	let xBeAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].be_alert_date))
-	let xDebtAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].debt_alert_date))
-	let xMarketAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].market_alert_date))
-	// let xAuditorAlert = () => {if (dataRaw[selectedIndex].auditor_alert_date == null) {return 'NO GOING CONCERN DOUBTS'} else {return xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].be_alert_date))}}
-	//svg.append('g').append('rect').attr('x',xBeAlert).attr('y',0).attr('width',svgWidth - xBeAlert).attr('height',svgHeight).attr('fill','rgba(163,194,163,0.02)')
-	svg.append('g').append('line').attr('x1',xBeAlert).attr('x2',xBeAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#8CA68C').attr('stroke-dasharray','4 4')
+	//
+
+	function drawBankruptcyLabelStart(type) {
+		let yCoord = yScale(data[data.length - 1].value);
+		let bankrupt = svg
+			.append('g')
+			.attr('class', 'bankruptcyLabel')
+			.attr('opacity', 0);
+		bankrupt
+			.append('text')
+			.attr('class', 'chartLabel sm caps')
+			.attr('x', svgWidth - 12)
+			.attr('y', yCoord - 12)
+			.attr('text-anchor', 'end')
+			.text('Bankrupt');
+
+		bankrupt
+			.append('line')
+			.attr('x1', svgWidth - 12)
+			.attr('x2', svgWidth - 4)
+			.attr('y1', yCoord - 12)
+			.attr('y2', yCoord - 4)
+			.attr('stroke', '#B3B3B3')
+			.attr('stroke-dasharray', '4 4');
+	}
+	function drawBankruptcyLabelEnd(type) {
+		svg
+			.selectAll('.bankruptcyLabel')
+			.transition()
+			.delay(500)
+			.duration(1000)
+			.attr('opacity', 1);
+	}
+
+	function drawBankruptcyLabelReset(type) {
+		svg
+			.selectAll('.bankruptcyLabel')
+			.transition()
+			.duration(1)
+			.attr('opacity', 0);
+	}
+
+	//
+
+	function getXAlert(type) {
+		if (dataRaw[selectedIndex][type + '_alert_date'] == null) {
+			return `no ${type} alert`;
+		} else {
+			return xScale(
+				d3.timeParse('%B %Y')(dataRaw[selectedIndex][type + '_alert_date'])
+			);
+		}
+	}
+
+	function drawXAlertStart(type) {
+		let xTypeAlert = getXAlert(type);
+		let alertName = `${type}Alert`;
+		let color, alertLabel, alertLabelClass;
+		switch (type) {
+			case 'be':
+				alertLabel = 'b(e) Alert';
+				alertLabelClass = 'primary';
+				color = '#8CA68C';
+				break;
+			default:
+				alertLabel = `${type} Alert`;
+				alertLabelClass = 'red';
+				color = '#E06952';
+		}
+
+		if (isNaN(xTypeAlert)) {
+			svg
+				.append('g')
+				.append('text')
+				.attr('class', `${alertName} chartLabel sm caps red`)
+				.attr('x', svgWidth / 2)
+				.attr('y', svgHeight / 2)
+				.attr('text-anchor', 'middle')
+				.attr('opacity', 0)
+				.text(xTypeAlert);
+		} else {
+			let alert = svg.append('g');
+			alert
+
+				.append('line')
+				.attr('class', alertName)
+				.attr('x1', xTypeAlert)
+				.attr('x2', xTypeAlert)
+				.attr('y1', svgHeight)
+				.attr('y2', svgHeight)
+				.attr('stroke', color)
+				.attr('stroke-dasharray', '4 4');
+
+			svg
+				.append('g')
+				.append('text')
+				.attr('class', `${alertName} chartLabel sm caps ${alertLabelClass}`)
+				.attr('x', xTypeAlert - 4)
+				.attr('y', 0)
+				.attr('text-anchor', 'end')
+				.attr('transform-origin', `${xTypeAlert - 4} 0`)
+				.attr('transform', 'rotate(-90)')
+				.attr('opacity', 0)
+				.text(alertLabel);
+		}
+	}
+
+	function drawXAlertEnd(type) {
+		let xTypeAlert = getXAlert(type);
+		let alertEl = `.${type}Alert`;
+		let alertLabelEl = `.${type}Alert.chartLabel`;
+		if (isNaN(xTypeAlert)) {
+			svg.selectAll(alertEl).transition().duration(1000).attr('opacity', 1);
+		} else {
+			svg.selectAll(alertEl).transition().duration(1000).attr('y2', 0);
+			svg
+				.selectAll(alertLabelEl)
+				.transition()
+				.duration(1000)
+				.attr('opacity', 1);
+		}
+	}
+
+	function drawXAlertReset(type) {
+		let xTypeAlert = getXAlert(type);
+		let alertEl = `.${type}Alert`;
+		let alertLabelEl = `.${type}Alert.chartLabel`;
+		if (isNaN(xTypeAlert)) {
+			svg.selectAll(alertEl).transition().duration(1).attr('opacity', 0);
+		} else {
+			svg.selectAll(alertEl).transition().duration(1).attr('y2', svgHeight);
+			svg.selectAll(alertLabelEl).transition().duration(1).attr('opacity', 0);
+		}
+	}
 
 	switch (type) {
 		case 'be':
-		// do nothing	
+			drawXAlertStart(type);
 			break;
-		case 'debt':
-			svg.append('g').append('line').attr('x1',xDebtAlert).attr('x2',xDebtAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')
-
-		break;
-case 'market':
-	svg.append('g').append('line').attr('x1',xMarketAlert).attr('x2',xMarketAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')
-
-	break;
-		case 'auditor':
-		// do null thing
-		if (dataRaw[selectedIndex].auditor_alert_date == null) {
-			console.log('NO GOING CONCERN DOUBTS')
-		} else {
-			let xAuditorAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].auditor_alert_date));
-			svg.append('g').append('line').attr('x1',xAuditorAlert).attr('x2',xAuditorAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')}	
-		// svg.append('g').append('line').attr('x1',xAuditorAlert).attr('x2',xAuditorAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')
-
-		break;
 		default:
-			// do nothing	
+			drawXAlertStart('be');
+			drawXAlertStart(type);
 	}
+
+	drawBankruptcyLabelStart(type);
+
+	//
+
+	ScrollTrigger.create({
+		trigger: idWrapper,
+		onEnter: function () {
+			path
+				.attr('stroke-dasharray', totalLength + ' ' + totalLength)
+				.attr('stroke-dashoffset', totalLength)
+				.transition()
+				.duration(1000)
+				.ease(d3.easeLinear)
+				.attr('stroke-dashoffset', 0);
+
+			switch (type) {
+				case 'be':
+					drawXAlertEnd(type);
+					break;
+				default:
+					drawXAlertEnd('be');
+					drawXAlertEnd(type);
+			}
+
+			drawBankruptcyLabelEnd(type);
+		},
+		onLeaveBack: function () {
+			switch (type) {
+				case 'be':
+					drawXAlertReset(type);
+					break;
+				default:
+					drawXAlertReset('be');
+					drawXAlertReset(type);
+			}
+			drawBankruptcyLabelReset(type);
+		},
+	});
 }
 
 function clearChart(type) {

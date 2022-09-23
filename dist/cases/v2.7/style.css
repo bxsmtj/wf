@@ -296,3 +296,27 @@ body {
   stroke: #808080;
   stroke-dasharray: 1 4;
 }
+
+.chartLabel {
+  fill: #B3B3B3;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.chartLabel.sm {
+  font-size: 10px;
+}
+
+.chartLabel.caps {
+    letter-spacing: 0.2em;
+      text-transform: uppercase;
+}
+
+.chartLabel.red {
+  fill: #E06952;
+}
+
+.chartLabel.primary {
+  fill: #8CA68C;
+}
