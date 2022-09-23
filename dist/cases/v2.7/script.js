@@ -17,7 +17,7 @@ const dataRaw = [
 		auditor_alert_date: null,
 		auditor_notice: null,
 		conclusion:
-			"Prior to Armstrong Flooring's Chapter 11 Bankruptcy in May 2022, the b(e) Score detected a risk 38 months in advance. Since this alert, the company's financial performance deteriorated and share prices became volatile.",
+			"Prior to Armstrong Flooring's Chapter 11 Bankruptcy in May 2022, the b(e) Score detected a risk 38 months in advance. Since then, the company's financial performance deteriorated and share prices became volatile.",
 		data: [
 			{
 				id: 1,
@@ -479,7 +479,7 @@ const dataRaw = [
 		auditor_alert_date: 'February 2020',
 		auditor_notice: 10.0,
 		conclusion:
-			"Prior to FHC Holdings' Chapter 11 Bankruptcy in December 2020, the b(e) Score detected a risk 22 months in advance. Since this alert, the company's leverage profile worsened, market sentiment declined, and their auditor issued a going concern doubt.",
+			"Prior to FHC Holdings' Chapter 11 Bankruptcy in December 2020, the b(e) Score detected a risk 22 months in advance. Since then, the company's leverage profile worsened, market sentiment declined, and their auditor issued a going concern doubt.",
 		data: [
 			{
 				id: 2,
@@ -941,7 +941,7 @@ const dataRaw = [
 		auditor_alert_date: null,
 		auditor_notice: null,
 		conclusion:
-			"Prior to Hi-Crush's Chapter 11 Bankruptcy in July 2020, the b(e) Score detected a risk 23 months in advance. Around this time, the company's financial performance was improving. Since this alert, financial performance deteriorated again, and share prices became volatile.",
+			"Prior to Hi-Crush's Chapter 11 Bankruptcy in July 2020, the b(e) Score detected a risk 23 months in advance. Around this time, the company's financial performance was improving. Since then, financial performance deteriorated again, and share prices became volatile.",
 		data: [
 			{
 				id: 3,
@@ -1295,7 +1295,7 @@ const dataRaw = [
 		auditor_alert_date: null,
 		auditor_notice: null,
 		conclusion:
-			"Prior to Celadon Group's Chapter 11 Bankruptcy in December 2019, the b(e) Score detected a risk 34 months in advance. Since this alert, the company faced higher market volatility, due in part to fraud allegations.",
+			"Prior to Celadon Group's Chapter 11 Bankruptcy in December 2019, the b(e) Score detected a risk 34 months in advance. Since then, the company faced higher market volatility, due in part to fraud allegations.",
 		data: [
 			{
 				id: 4,
@@ -1757,7 +1757,7 @@ const dataRaw = [
 		auditor_alert_date: null,
 		auditor_notice: null,
 		conclusion:
-			"Prior to Matress Firm Holding's Chapter 11 Bankruptcy in October 2018, the b(e) Score detected a risk 31 months in advance. Since this alert, the company faced higher market volatility, due in part to fraud allegations, and was delisted.",
+			"Prior to Matress Firm Holding's Chapter 11 Bankruptcy in October 2018, the b(e) Score detected a risk 31 months in advance. Since then, the company faced higher market volatility, due in part to fraud allegations, and was delisted.",
 		data: [
 			{
 				id: 5,
@@ -2210,7 +2210,7 @@ const dataRaw = [
 		auditor_alert_date: 'January 2014',
 		auditor_notice: 13.0,
 		conclusion:
-			"Prior to RadioShack's Chapter 11 Bankruptcy in February 2015, the b(e) Score detected a risk 40 months in advance. Since this alert, the company began to restructure, but unsuccessful efforts resulted in a second alert 22 months later, followed by going concern doubts and higher market volatility.",
+			"Prior to RadioShack's Chapter 11 Bankruptcy in February 2015, the b(e) Score detected a risk 40 months in advance. Since then, the company began to restructure, but unsuccessful efforts resulted in a second alert 22 months later, followed by going concern doubts and higher market volatility.",
 		data: [
 			{
 				id: 6,
@@ -2672,7 +2672,7 @@ const dataRaw = [
 		auditor_alert_date: null,
 		auditor_notice: null,
 		conclusion:
-			"Prior to Syntax-Brillian's Chapter 11 Bankruptcy in July 2008, the b(e) Score detected a risk 18 months in advance. Around this time, the company's financial performance was improving. Since this alert, the company faced higher market volatility.",
+			"Prior to Syntax-Brillian's Chapter 11 Bankruptcy in July 2008, the b(e) Score detected a risk 18 months in advance. Around this time, the company's financial performance was improving. Since then, the company faced higher market volatility.",
 		data: [
 			{
 				id: 7,
@@ -2873,7 +2873,7 @@ const dataRaw = [
 		auditor_alert_date: 'January 2006',
 		auditor_notice: 19.0,
 		conclusion:
-			"Prior to Quaker Fabric's Chapter 11 Bankruptcy in August 2007, the b(e) Score detected a risk 27 months in advance. Since this alert, the company faced significant leverage issues, going concern doubts, and sudden market volatility.",
+			"Prior to Quaker Fabric's Chapter 11 Bankruptcy in August 2007, the b(e) Score detected a risk 27 months in advance. Since then, the company faced significant leverage issues, going concern doubts, and sudden market volatility.",
 		data: [
 			{
 				id: 8,
@@ -3401,9 +3401,11 @@ function drawChart(type) {
 			yAxis.ticks(2).tickValues([0, 1]);
 			break;
 		default:
-			if (yDomainMax > 100) {
-				stepValue = 40;
-			} else if (yDomainMax > 10) {
+			if (yDomainMax > 200) {
+				stepValue = 60;
+			} else if (yDomainMax > 100) {
+				stepValue = 40;}
+				else if (yDomainMax > 10) {
 				stepValue = 10;
 			} else {
 				stepValue = 2;
@@ -3479,7 +3481,6 @@ function drawChart(type) {
 					100 + stepValueSecondary,
 					stepValueSecondary
 				);
-			console.log(tickValuesSecondary);
 			yAxisSecondary.ticks(yDomainTicks).tickValues(tickValuesSecondary);
 
 			svg
@@ -3542,6 +3543,39 @@ function drawChart(type) {
 		.selectAll('text')
 		.attr('class', 'axisLabelSecondary');
 	svg.selectAll('.domain').remove();
+
+	let xBeAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].be_alert_date))
+	let xDebtAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].debt_alert_date))
+	let xMarketAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].market_alert_date))
+	// let xAuditorAlert = () => {if (dataRaw[selectedIndex].auditor_alert_date == null) {return 'NO GOING CONCERN DOUBTS'} else {return xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].be_alert_date))}}
+	//svg.append('g').append('rect').attr('x',xBeAlert).attr('y',0).attr('width',svgWidth - xBeAlert).attr('height',svgHeight).attr('fill','rgba(163,194,163,0.02)')
+	svg.append('g').append('line').attr('x1',xBeAlert).attr('x2',xBeAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#8CA68C').attr('stroke-dasharray','4 4')
+
+	switch (type) {
+		case 'be':
+		// do nothing	
+			break;
+		case 'debt':
+			svg.append('g').append('line').attr('x1',xDebtAlert).attr('x2',xDebtAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')
+
+		break;
+case 'market':
+	svg.append('g').append('line').attr('x1',xMarketAlert).attr('x2',xMarketAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')
+
+	break;
+		case 'auditor':
+		// do null thing
+		if (dataRaw[selectedIndex].auditor_alert_date == null) {
+			console.log('NO GOING CONCERN DOUBTS')
+		} else {
+			let xAuditorAlert = xScale(d3.timeParse('%B %Y')(dataRaw[selectedIndex].auditor_alert_date));
+			svg.append('g').append('line').attr('x1',xAuditorAlert).attr('x2',xAuditorAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')}	
+		// svg.append('g').append('line').attr('x1',xAuditorAlert).attr('x2',xAuditorAlert).attr('y1',0).attr('y2',svgHeight).attr('stroke','#E06952').attr('stroke-dasharray','4 4')
+
+		break;
+		default:
+			// do nothing	
+	}
 }
 
 function clearChart(type) {
