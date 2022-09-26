@@ -30,7 +30,7 @@ function initializeTypedAnimationsH() {
 			scrollTrigger: {
 				trigger: triggerElement,
 				start: 'top bottom',
-				end: 'bottom top',
+				// end: 'bottom top',
 				// toggleActions: 'play none none none',
 			},
 		});
@@ -64,11 +64,12 @@ function initializeTypedAnimationsP() {
 			scrollTrigger: {
 				trigger: triggerElement,
 				start: 'top bottom',
-				end: 'bottom top',
-				toggleActions: 'play none none none',
+				// end: 'bottom top',
+				// toggleActions: 'play none none none',
 			},
 		});
 		tl.from(targetElement, {
+			delay: 0.5,
 			duration: 0.02,
 			opacity: 0.1,
 			ease: 'power1.none',

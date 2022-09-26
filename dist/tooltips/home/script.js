@@ -16,6 +16,7 @@ tippy('#tooltip-ml', {
 		'<div class="flex flex-col"><div class="tooltip__section--heading">DEFINITION_1.2 / Machine Learning</div><div class="border-tooltip"></div></div><div class="tooltip__section">A field of artificial intelligence involving algorithms that implicitly learn from complex, non-linear patterns in high-dimensional data in order to analyze a given scenario.</div></div>',
 	maxWidth: 488,
 	allowHTML: true,
+	placement: 'bottom',
 });
 
 $('.tooltip').each(function () {
