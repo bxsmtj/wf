@@ -30,7 +30,6 @@ $(document).ready(function () {
 			let tl = gsap.timeline({
 				scrollTrigger: {
 					trigger: triggerElement,
-					markers: true,
 				},
 			});
 			tl.from(targetElement, {
@@ -64,7 +63,6 @@ $(document).ready(function () {
 			let tl = gsap.timeline({
 				scrollTrigger: {
 					trigger: triggerElement,
-					markers: true,
 				},
 			});
 			tl.from(targetElement, {
