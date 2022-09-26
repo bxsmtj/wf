@@ -99,3 +99,58 @@ body {
   font-family: 'Roboto Mono', monospace;
   font-size: 14px;
 }
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.tippy-box[data-theme~='bx'] {
+  background-color: #1B1E1B;
+  color: #A3C2A3;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  border: 1px solid #5E6F5E;
+  border-radius: 2px;
+  padding: 0;
+}
+
+.tooltip {
+  border-bottom: 1px solid #A3C2A3;
+  display: inline;
+  background-repeat: no-repeat;
+  transition: all 500ms ease-in-out;
+  background-position: left;
+  background-size: 0% 100%;
+  background-image: linear-gradient(rgba(163, 194, 163, 0.2), rgba(163, 194, 163, 0.2));
+  padding: 4px 2px 4px 2px;
+}
+
+.tooltip:hover {
+  cursor: pointer;
+  background-image: linear-gradient(rgba(163, 194, 163, 0.3), rgba(163, 194, 163, 0.3));
+}
+
+.tooltip__section{
+  width: 100%;
+}
+
+.tooltip__section--heading {
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+}
+
+.border-tooltip {
+  border-bottom: 1px solid #3B443B;
+  padding-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.p-tooltip {
+padding: 6px 8px 6px 8px;
+}

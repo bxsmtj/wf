@@ -1,9 +1,39 @@
-tippy('.tippy', {          // Add the class tippy to your element
-	theme: 'light',          // Dark or Light
-	animation: 'scale',      // Options, shift-away, shift-toward, scale, persepctive
-	duration: 250,           // Duration of the Animation
-	arrow: true,             // Add arrow to the tooltip
-	arrowType: 'round',      // Sharp, round or empty for none
-	delay: [0, 50],          // Trigger delay in & out
-	maxWidth: 240,           // Optional, max width settings
-})
+gsap.registerPlugin(ScrollTrigger);
+
+tippy('#tooltip-ss', {
+	theme: 'bx',
+	arrow: false,
+	trigger: 'click mouseenter focus',
+	content:
+		'<div class="flex flex-col"><div class="tooltip__section--heading">DEFINITION_1.1 / Special Situations</div><div class="border-tooltip"></div></div><div class="tooltip__section">Scenarios in which businesses undertake material action in efforts to improve their finances or operations. Examples include: M&As, spin-offs, restructurings, and bankruptcies.</div></div>',
+	maxWidth: 488,
+	allowHTML: true,
+});
+
+tippy('#tooltip-ml', {
+	theme: 'bx',
+	arrow: false,
+	trigger: 'click mouseenter focus',
+	content:
+		'<div class="flex flex-col"><div class="tooltip__section--heading">DEFINITION_1.2 / Machine Learning</div><div class="border-tooltip"></div></div><div class="tooltip__section">A field of artificial intelligence involving algorithms that implicitly learn from complex, non-linear patterns in high-dimensional data in order to analyze a given scenario.</div></div>',
+	maxWidth: 488,
+	allowHTML: true,
+});
+
+$('.tooltip').each(function () {
+	let tooltipElement = $(this);
+	console.log(tooltipElement);
+
+	let tl = gsap.timeline({
+		scrollTrigger: {
+			trigger: tooltipElement,
+			start: 'top bottom',
+			end: 'bottom top',
+		},
+	});
+	tl.to(tooltipElement, {
+		delay: 0.5,
+		duration: 0.25,
+		backgroundSize: '+=100% +=100%',
+	});
+});
