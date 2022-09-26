@@ -2,7 +2,7 @@ let windowWidth = window.outerWidth;
 gsap.registerPlugin(SplitText);
 gsap.registerPlugin(ScrollTrigger);
 
-$('.typed').each(function () {
+$('.split').each(function () {
 	let myText = $(this);
 	let mySplitText;
 	function createSplits() {
@@ -21,8 +21,8 @@ $('.typed').each(function () {
 	});
 });
 
-function initializeTypedAnimations() {
-	$('.typed').each(function () {
+function initializeTypedAnimationsH() {
+	$('.typed--h').each(function () {
 		let triggerElement = $(this);
 		let targetElement = $(this).find('.split-chars');
 
@@ -31,7 +31,7 @@ function initializeTypedAnimations() {
 				trigger: triggerElement,
 				start: 'top bottom',
 				end: 'bottom top',
-				toggleActions: 'restart none none none',
+				// toggleActions: 'play none none none',
 			},
 		});
 		tl.from(targetElement, {
@@ -55,4 +55,30 @@ function initializeTypedAnimations() {
 	});
 }
 
-initializeTypedAnimations();
+function initializeTypedAnimationsP() {
+	$('.typed--p').each(function () {
+		let triggerElement = $(this);
+		let targetElement = $(this).find('.split-chars');
+
+		let tl = gsap.timeline({
+			scrollTrigger: {
+				trigger: triggerElement,
+				start: 'top bottom',
+				end: 'bottom top',
+				toggleActions: 'play none none none',
+			},
+		});
+		tl.from(targetElement, {
+			duration: 0.02,
+			opacity: 0.1,
+			ease: 'power1.none',
+			stagger: {
+				each: 0.025,
+				from: '0',
+			},
+		});
+	});
+}
+
+initializeTypedAnimationsH();
+initializeTypedAnimationsP();
