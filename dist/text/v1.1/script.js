@@ -83,7 +83,15 @@ $(document).ready(function () {
 	initializeTypedAnimationsH();
 	initializeTypedAnimationsP();
 
-	window.addEventListener('resize', () => {
-		ScrollTrigger.refresh(true);
+	const resizeElements = document.querySelectorAll('.section');
+	const resizeObserver = new ResizeObserver((entries) => {
+		entries.forEach(() => {
+			ScrollTrigger.refresh(true);
+			console.log('section resized');
+		});
+	});
+
+	resizeElements.forEach((elt) => {
+		resizeObserver.observe(elt);
 	});
 });
