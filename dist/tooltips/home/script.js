@@ -1,5 +1,3 @@
-gsap.registerPlugin(ScrollTrigger);
-
 tippy('#tooltip-ss', {
 	theme: 'bx',
 	arrow: false,
@@ -22,7 +20,6 @@ tippy('#tooltip-ml', {
 
 $('.tooltip').each(function () {
 	let tooltipElement = $(this);
-	console.log(tooltipElement);
 
 	let tl = gsap.timeline({
 		scrollTrigger: {

@@ -126,7 +126,8 @@ body {
   background-position: left;
   background-size: 0% 100%;
   background-image: linear-gradient(rgba(163, 194, 163, 0.2), rgba(163, 194, 163, 0.2));
-  padding: 4px 2px 4px 2px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .tooltip:hover {
@@ -152,5 +153,5 @@ body {
 }
 
 .p-tooltip {
-padding: 6px 8px 6px 8px;
+  padding: 6px 8px 6px 8px;
 }
