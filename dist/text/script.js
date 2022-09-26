@@ -29,7 +29,8 @@ function initializeTypedAnimationsH() {
 		let tl = gsap.timeline({
 			scrollTrigger: {
 				trigger: triggerElement,
-				start: 'top bottom',
+				markers: true,
+				// start: 'top bottom',
 				// end: 'bottom top',
 				// toggleActions: 'play none none none',
 			},
@@ -63,7 +64,8 @@ function initializeTypedAnimationsP() {
 		let tl = gsap.timeline({
 			scrollTrigger: {
 				trigger: triggerElement,
-				start: 'top bottom',
+				markers: true,
+				// start: 'top bottom',
 				// end: 'bottom top',
 				// toggleActions: 'play none none none',
 			},
@@ -74,7 +76,7 @@ function initializeTypedAnimationsP() {
 			opacity: 0.1,
 			ease: 'power1.none',
 			stagger: {
-				each: 0.025,
+				each: 0.05,
 				from: '0',
 			},
 		});
