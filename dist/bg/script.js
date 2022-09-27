@@ -15,108 +15,103 @@ const margin = { top: 0, right: 0, bottom: 0, left: 0 };
 
 // FUNCTION TO DRAW CHART
 async function drawChart() {
-	// let url = window.location.href;
+	let url = window.location.href;
 
-	let urlFull = 'https://b-x-t.webflow.io/be-score';
+	let splitUrl = (string) => {
+		return string.split('/');
+	};
 
-	function processUrl(string) {
-		let split = string.split('/');
-		let last = split[split.length - 1];
+	let urlProcessed = splitUrl(url);
 
-		const acceptableUrls = ['b-x-t.webflow.io'];
-
-		if (last === '') {
-			return split[split.length - 2];
-		} else {
-			return last;
-		}
-	}
-
-	let url = processUrl(urlFull);
-
-	console.log(url);
 	const rawData = await d3.csv('data_contour.csv');
 
-	const arrXY = [
+	const xySettings = [
 		{
 			id: 0,
-			url: '/',
+			url: null,
 			x: 'BK',
 			y: 'BW',
 		},
 		{
 			id: 1,
-			url: 'https://b-x-t.webflow.io/be-score',
+			url: 'be-score',
 			x: 'J',
 			y: 'BW',
 		},
 		{
 			id: 2,
-			url: 'https://b-x-t.webflow.io/bcf-score',
+			url: 'bcf-score',
 			x: 'AP',
 			y: 'BW',
 		},
 		{
 			id: 3,
-			url: 'https://b-x-t.webflow.io/bcs-score',
+			url: 'bcs-score',
 			x: 'BB',
 			y: 'BW',
 		},
 		{
 			id: 4,
-			url: 'https://b-x-t.webflow.io/about',
+			url: 'about',
 			x: 'X',
 			y: 'BW',
 		},
 		{
 			id: 5,
-			url: 'https://b-x-t.webflow.io/contact',
+			url: 'contact',
 			x: 'AO',
 			y: 'BW',
 		},
 		{
 			id: 6,
-			url: 'https://b-x-t.webflow.io/discovery-sessions',
+			url: 'discovery-sessions',
 
 			x: 'BR',
 			y: 'BW',
 		},
 		{
 			id: 7,
-			url: 'https://b-x-t.webflow.io/bx-journal',
+			url: 'bx-journal',
 			x: 'BY',
 			y: 'BW',
 		},
 		{
 			id: 8,
-			url: 'https://b-x-t.webflow.io/bx-alerts',
+			url: 'bx-alerts',
 			x: 'AI',
 			y: 'BW',
 		},
 	];
 
-	function getXY(url) {
-		let foundObj = arrXY.find((d) => d['url'].includes(url));
-		console.log(foundObj);
-
-		if (foundObj === undefined) {
-			return 0;
-		} else {
-			return foundObj.id;
-		}
+	function getXY(arr) {
+		let arrProcessed = xySettings.map((d) => {
+			if (arr.includes(xySettings[d.id]['url'])) {
+				return 1;
+			} else {
+				return 0;
+			}
+		});
+		let index = () => {
+			let i = arrProcessed.indexOf(1);
+			if (i == -1) {
+				return 0;
+			} else {
+				return i;
+			}
+		};
+		return index();
 	}
 
-	let contourId = getXY(url);
+	let contourId = getXY(urlProcessed);
 
 	const processedData = rawData.map((d) => ({
-		x: +d[arrXY[contourId].x],
-		y: +d[arrXY[contourId].y],
+		x: +d[xySettings[contourId].x],
+		y: +d[xySettings[contourId].y],
 	}));
-
-	console.log(processedData);
 
 	const xAccessor = (d) => d.x;
 	const yAccessor = (d) => d.y;
+
 	// DEFINE VARIABLES
 	// animation elements
 	const duration = 5000;
