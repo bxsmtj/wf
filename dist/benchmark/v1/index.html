@@ -15,8 +15,15 @@
 <body>
     <div id="wrapper__radio-statistic">
     <fieldset id="radio__statistic">
-        <input type="radio" id="accuracy" value="accuracy" name="statistic" checked><label for="accuracy">Accuracy</label>
-        <input type="radio" id="f1" value="f1" name="statistic"><label for="f1">F1-Score</label>
+        <div class="flex">
+            <div class="radio__btn">
+                <input type="radio" id="accuracy" value="accuracy" name="statistic" checked><label for="accuracy">Accuracy</label>
+            </div>
+            <div class="border-r"></div>
+            <div class="radio__btn">
+                <input type="radio" id="f1" value="f1" name="statistic"><label for="f1">F1-Score</label>
+            </div>
+        </div>
     </fieldset>
     </div>
     <div class="flex">
