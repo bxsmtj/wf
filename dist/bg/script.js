@@ -5152,6 +5152,4 @@ function drawChart() {
 }
 
 // CALL MAIN FUNCTION
-$(document).ready(function () {
-	drawChart();
-});
+drawChart();
