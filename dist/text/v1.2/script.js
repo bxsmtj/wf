@@ -85,7 +85,6 @@ $(document).ready(function () {
 	const resizeObserver = new ResizeObserver((entries) => {
 		entries.forEach(() => {
 			ScrollTrigger.refresh(true);
-			console.log('section resized');
 		});
 	});
 
