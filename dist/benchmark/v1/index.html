@@ -13,10 +13,57 @@
 </head>
 
 <body>
-    <div id="wrapper__chart-benchmark" class="w-75 m-1">
-        
+    <div id="wrapper__radio-statistic">
+    <!-- <fieldset id="radio__statistic">
+        <input type="radio" id="accuracy" value="accuracy" name="statistic" checked><label for="accuracy">Accuracy</label>
+        <input type="radio" id="f1" value="f1" name="statistic"><label for="f1">F1-Score</label>
+    </fieldset> -->
     </div>
-    
+    <div class="flex">
+    <div id="wrapper__chart-benchmark" class="w-75 m-1"></div>
+    <div class="flex flex-col">
+        <div class="flex flex-col">
+            <p>b(e) Score:</p>
+            <div class="flex">
+                <div class="flex flex-col">
+                    <p id="wrapper__be-24"></p>
+                    <p>24 Months</p>
+                </div>
+                <div class="flex flex-col">
+                    <p id="wrapper__be-12"></p>
+                    <p>12 Months</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <p>Altman Z-Score:</p>
+            <div class="flex">
+                <div class="flex flex-col">
+                    <p id="wrapper__altman-24"></p>
+                    <p>24 Months</p>
+                </div>
+                <div class="flex flex-col">
+                    <p id="wrapper__altman-12"></p>
+                    <p>12 Months</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <p>Going Concern Opinion:</p>
+            <div class="flex">
+                <div class="flex flex-col">
+                    <p id="wrapper__auditor-24"></p>
+                    <p>24 Months</p>
+                </div>
+                <div class="flex flex-col">
+                    <p id="wrapper__auditor-12"></p>
+                    <p>12 Months</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>

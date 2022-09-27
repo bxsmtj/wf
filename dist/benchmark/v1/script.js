@@ -1,14 +1,107 @@
 gsap.registerPlugin(ScrollTrigger);
 idWrapper = '#wrapper__chart-benchmark';
-// const dataRaw = []
+const dataRaw = [
+	{
+		months: 30,
+		accuracy_be: 0.625,
+		accuracy_altman: 0.493,
+		accuracy_auditor: 0.527,
+		f1_be: 0.837,
+		f1_altman: 0.503,
+		f1_auditor: 0.079,
+	},
+	{
+		months: 28,
+		accuracy_be: 0.851,
+		accuracy_altman: 0.507,
+		accuracy_auditor: 0.527,
+		f1_be: 0.843,
+		f1_altman: 0.523,
+		f1_auditor: 0.079,
+	},
+	{
+		months: 26,
+		accuracy_be: 0.851,
+		accuracy_altman: 0.5,
+		accuracy_auditor: 0.527,
+		f1_be: 0.845,
+		f1_altman: 0.513,
+		f1_auditor: 0.079,
+	},
+	{
+		months: 24,
+		accuracy_be: 0.873,
+		accuracy_altman: 0.5,
+		accuracy_auditor: 0.52,
+		f1_be: 0.871,
+		f1_altman: 0.51,
+		f1_auditor: 0.077,
+	},
+	{
+		months: 22,
+		accuracy_be: 0.887,
+		accuracy_altman: 0.507,
+		accuracy_auditor: 0.513,
+		f1_be: 0.887,
+		f1_altman: 0.526,
+		f1_auditor: 0.052,
+	},
+	{
+		months: 20,
+		accuracy_be: 0.847,
+		accuracy_altman: 0.52,
+		accuracy_auditor: 0.513,
+		f1_be: 0.839,
+		f1_altman: 0.538,
+		f1_auditor: 0.052,
+	},
+	{
+		months: 18,
+		accuracy_be: 0.887,
+		accuracy_altman: 0.547,
+		accuracy_auditor: 0.507,
+		f1_be: 0.886,
+		f1_altman: 0.564,
+		f1_auditor: 0.051,
+	},
+	{
+		months: 16,
+		accuracy_be: 0.9,
+		accuracy_altman: 0.553,
+		accuracy_auditor: 0.513,
+		f1_be: 0.899,
+		f1_altman: 0.568,
+		f1_auditor: 0.076,
+	},
+	{
+		months: 14,
+		accuracy_be: 0.907,
+		accuracy_altman: 0.56,
+		accuracy_auditor: 0.527,
+		f1_be: 0.908,
+		f1_altman: 0.577,
+		f1_auditor: 0.123,
+	},
+	{
+		months: 12,
+		accuracy_be: 0.913,
+		accuracy_altman: 0.553,
+		accuracy_auditor: 0.527,
+		f1_be: 0.915,
+		f1_altman: 0.584,
+		f1_auditor: 0.123,
+	},
+];
+
+const data24 = dataRaw[3];
+const data12 = dataRaw[9];
 
 let svgMargin = { top: 32, right: 8, bottom: 40, left: 40 };
 let svgWidth;
 let svgHeight;
 
-async function drawChartBenchmark(type) {
+function drawChartBenchmark(type) {
 	// type = ['accuracy', 'f1']
-	const dataRaw = await d3.csv('data_benchmark.csv');
 
 	const data = dataRaw.map((d) => ({
 		months: +d.months,
@@ -16,8 +109,6 @@ async function drawChartBenchmark(type) {
 		altman: +d[type + '_altman'],
 		auditor: +d[type + '_auditor'],
 	}));
-
-	console.log(data);
 
 	let yAxisTitle;
 	switch (type) {
@@ -82,7 +173,7 @@ async function drawChartBenchmark(type) {
 
 	let defs = svg.append('defs');
 
-	let maskDashed = defs
+	defs
 		.append('mask')
 		.attr('id', 'maskDashed')
 		.append('path')
@@ -92,7 +183,7 @@ async function drawChartBenchmark(type) {
 		.attr('stroke-width', 2)
 		.attr('stroke-dasharray', '8 4');
 
-	let maskDotted = defs
+	defs
 		.append('mask')
 		.attr('id', 'maskDotted')
 		.append('path')
@@ -187,6 +278,87 @@ async function drawChartBenchmark(type) {
 	});
 }
 
+function clearChartBenchmark() {
+	d3.select(idWrapper).selectAll('svg').remove();
+}
+
+function formatPercent(num) {
+	return d3.format('.0%')(num);
+}
+
+function setBenchmarkStats(statistic, type) {
+	let el12 = document.getElementById('wrapper__' + type + '-12');
+	let el24 = document.getElementById('wrapper__' + type + '-24');
+
+	el12.innerText = formatPercent(data12[statistic + '_' + type]);
+	el24.innerText = formatPercent(data24[statistic + '_' + type]);
+}
+
+$(document).ready(function () {
+	// let elWrapper = document.getElementById('wrapper__radio-statistic');
+	// let elSelect = document.createElement('fieldset');
+	// elSelect.id = 'radio__statistic';
+	// // elSelect.classList.add('mono');
+	// const arrStatistics = [
+	// 	{ statistic: 'accuracy', label: 'Accuracy' },
+	// 	{ statistic: 'f1', label: 'F1-Score' },
+	// ];
+	// arrStatistics.forEach((d, i) => {
+	// 	let elOption = document.createElement('input');
+	// 	elOption.type = 'radio';
+	// 	elOption.id = d.statistic;
+	// 	elOption.value = d.statistic;
+	// 	elOption.name = 'statistic';
+	// 	let elLabel = document.createElement('label');
+	// 	// elLabel.htmlFor = d.statistic;
+	// 	elLabel.innerText = d.label;
+	// 	if (i == 0) {
+	// 		elOption.setAttribute('checked', '');
+	// 	}
+	// 	elOption.appendChild(elLabel);
+	// 	elSelect.appendChild(elOption);
+	// });
+	// elWrapper.appendChild(elSelect);
+	//
+	setBenchmarkStats('accuracy', 'be', 'wrapper__be-12', 'wrapper__be-24');
+	setBenchmarkStats(
+		'accuracy',
+		'altman',
+		'wrapper__altman-12',
+		'wrapper__altman-24'
+	);
+	setBenchmarkStats(
+		'accuracy',
+		'auditor',
+		'wrapper__auditor-12',
+		'wrapper__auditor-24'
+	);
+
+	$('#radio__statistic input:radio').on('change', function () {
+		let selectedStatistic = $(this).val();
+		clearChartBenchmark();
+		drawChartBenchmark(selectedStatistic);
+		setBenchmarkStats(
+			selectedStatistic,
+			'be',
+			'wrapper__be-12',
+			'wrapper__be-24'
+		);
+		setBenchmarkStats(
+			selectedStatistic,
+			'altman',
+			'wrapper__altman-12',
+			'wrapper__altman-24'
+		);
+		setBenchmarkStats(
+			selectedStatistic,
+			'auditor',
+			'wrapper__auditor-12',
+			'wrapper__auditor-24'
+		);
+	});
+});
+
 $(window).on('load', function () {
 	svgWidth = $(idWrapper).width() - svgMargin.left - svgMargin.right;
 	svgHeight = $(idWrapper).width() / 2 - svgMargin.top - svgMargin.bottom;
@@ -197,8 +369,7 @@ $(window).on('load', function () {
 		svgWidth = $(idWrapper).width() - svgMargin.left - svgMargin.right;
 		svgHeight = $(idWrapper).width() / 2 - svgMargin.top - svgMargin.bottom;
 
-		// clearChart();
-
-		drawChartBenchmark('accuracy');
+		clearChartBenchmark();
+		drawChartBenchmark($('#toggle__statistic input:radio').val());
 	});
 });
