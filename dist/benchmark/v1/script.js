@@ -77,12 +77,34 @@ async function drawChartBenchmark(type) {
 			return d.value !== null;
 		});
 
+	let defs = svg.append('defs');
+	let maskDashed = defs
+		.append('mask')
+		.attr('id', 'maskDashed')
+		.append('path')
+		.attr('d', line(data))
+		.attr('fill', 'none')
+		.attr('stroke', 'white')
+		.attr('stroke-width', 2)
+		.attr('stroke-dasharray', '8 4');
+
+	let maskDotted = defs
+		.append('mask')
+		.attr('id', 'maskDotted')
+		.append('path')
+		.attr('d', line(data))
+		.attr('fill', 'none')
+		.attr('stroke', 'white')
+		.attr('stroke-width', 2)
+		.attr('stroke-dasharray', '2 2');
+
 	let path = svg
 		.append('path')
 		.attr('d', line(data))
 		.attr('fill', 'none')
 		.attr('stroke', '#B3B3B3')
-		.attr('stroke-width', 1);
+		.attr('stroke-width', 1)
+		.attr('mask', 'url(#maskDashed)');
 
 	let totalLength = path.node().getTotalLength();
 
