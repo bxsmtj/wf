@@ -4916,10 +4916,9 @@ function drawBg() {
 		.attr('height', height);
 
 	function setContourAttr(selection) {
-		selection
-			.attr('fill', 'transparent')
-			.attr('stroke', 'rgb(140, 166, 140)')
-			.attr('stroke-opacity', 0.2);
+		selection.attr('fill', 'transparent').attr('stroke', '#333333');
+		// .attr('stroke', 'rgb(140, 166, 140)')
+		// .attr('stroke-opacity', 0.2);
 	}
 
 	const g = svg.append('g');
