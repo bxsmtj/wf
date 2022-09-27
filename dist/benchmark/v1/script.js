@@ -295,31 +295,6 @@ function setBenchmarkStats(statistic, type) {
 }
 
 $(document).ready(function () {
-	// let elWrapper = document.getElementById('wrapper__radio-statistic');
-	// let elSelect = document.createElement('fieldset');
-	// elSelect.id = 'radio__statistic';
-	// // elSelect.classList.add('mono');
-	// const arrStatistics = [
-	// 	{ statistic: 'accuracy', label: 'Accuracy' },
-	// 	{ statistic: 'f1', label: 'F1-Score' },
-	// ];
-	// arrStatistics.forEach((d, i) => {
-	// 	let elOption = document.createElement('input');
-	// 	elOption.type = 'radio';
-	// 	elOption.id = d.statistic;
-	// 	elOption.value = d.statistic;
-	// 	elOption.name = 'statistic';
-	// 	let elLabel = document.createElement('label');
-	// 	// elLabel.htmlFor = d.statistic;
-	// 	elLabel.innerText = d.label;
-	// 	if (i == 0) {
-	// 		elOption.setAttribute('checked', '');
-	// 	}
-	// 	elOption.appendChild(elLabel);
-	// 	elSelect.appendChild(elOption);
-	// });
-	// elWrapper.appendChild(elSelect);
-	//
 	setBenchmarkStats('accuracy', 'be', 'wrapper__be-12', 'wrapper__be-24');
 	setBenchmarkStats(
 		'accuracy',
