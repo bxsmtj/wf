@@ -65,24 +65,28 @@ async function drawChartBenchmark(type) {
 
 	svg.append('g').call(yAxis);
 
-	let line = d3
-		.line()
-		.x(function (d) {
-			return xScale(d.months);
-		})
-		.y(function (d) {
-			return yScale(d.be);
-		})
-		.defined(function (d) {
-			return d.value !== null;
-		});
+	function lineGenerator(yKey) {
+		return d3
+			.line()
+			.x(function (d) {
+				return xScale(d.months);
+			})
+			.y(function (d) {
+				return yScale(d[yKey]);
+			});
+	}
+
+	let lineBe = lineGenerator('be');
+	let lineAltman = lineGenerator('altman');
+	let lineAuditor = lineGenerator('auditor');
 
 	let defs = svg.append('defs');
+
 	let maskDashed = defs
 		.append('mask')
 		.attr('id', 'maskDashed')
 		.append('path')
-		.attr('d', line(data))
+		.attr('d', lineAltman(data))
 		.attr('fill', 'none')
 		.attr('stroke', 'white')
 		.attr('stroke-width', 2)
@@ -92,21 +96,38 @@ async function drawChartBenchmark(type) {
 		.append('mask')
 		.attr('id', 'maskDotted')
 		.append('path')
-		.attr('d', line(data))
+		.attr('d', lineAuditor(data))
 		.attr('fill', 'none')
 		.attr('stroke', 'white')
 		.attr('stroke-width', 2)
 		.attr('stroke-dasharray', '2 2');
 
-	let path = svg
+	let pathBe = svg
 		.append('path')
-		.attr('d', line(data))
+		.attr('d', lineBe(data))
 		.attr('fill', 'none')
 		.attr('stroke', '#B3B3B3')
-		.attr('stroke-width', 1)
+		.attr('stroke-width', 2);
+
+	let pathAltman = svg
+		.append('path')
+		.attr('d', lineAltman(data))
+		.attr('fill', 'none')
+		.attr('stroke', '#B3B3B3')
+		.attr('stroke-width', 2)
 		.attr('mask', 'url(#maskDashed)');
 
-	let totalLength = path.node().getTotalLength();
+	let pathAuditor = svg
+		.append('path')
+		.attr('d', lineAuditor(data))
+		.attr('fill', 'none')
+		.attr('stroke', '#B3B3B3')
+		.attr('stroke-width', 2)
+		.attr('mask', 'url(#maskDotted)');
+
+	let totalLengthBe = pathBe.node().getTotalLength();
+	let totalLengthAltman = pathAltman.node().getTotalLength();
+	let totalLengthAuditor = pathAuditor.node().getTotalLength();
 
 	svg
 		.append('text')
@@ -137,12 +158,30 @@ async function drawChartBenchmark(type) {
 	ScrollTrigger.create({
 		trigger: idWrapper,
 		onEnter: function () {
-			path
-				.attr('stroke-dasharray', totalLength + ' ' + totalLength)
-				.attr('stroke-dashoffset', totalLength)
+			pathBe
+				.attr('stroke-dasharray', totalLengthBe + ' ' + totalLengthBe)
+				.attr('stroke-dashoffset', totalLengthBe)
 				.transition()
 				.duration(1000)
-				.ease(d3.easeLinear)
+				.ease(d3.easeCubicInOut)
+				.attr('stroke-dashoffset', 0);
+
+			pathAltman
+				.attr('stroke-dasharray', totalLengthAltman + ' ' + totalLengthAltman)
+				.attr('stroke-dashoffset', totalLengthAltman)
+				.transition()
+				.delay(250)
+				.duration(1000)
+				.ease(d3.easeCubicInOut)
+				.attr('stroke-dashoffset', 0);
+
+			pathAuditor
+				.attr('stroke-dasharray', totalLengthAuditor + ' ' + totalLengthAuditor)
+				.attr('stroke-dashoffset', totalLengthAuditor)
+				.transition()
+				.delay(500)
+				.duration(1000)
+				.ease(d3.easeCubicInOut)
 				.attr('stroke-dashoffset', 0);
 		},
 	});
