@@ -4808,7 +4808,7 @@ const rawData = [
 ];
 
 // FUNCTION TO DRAW CHART
-function drawChart() {
+function drawBg() {
 	let url = window.location.href;
 
 	let splitUrl = (string) => {
@@ -5152,4 +5152,6 @@ function drawChart() {
 }
 
 // CALL MAIN FUNCTION
-drawChart();
+$(document).ready(function () {
+	drawBg();
+});
