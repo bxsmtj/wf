@@ -85,7 +85,7 @@ body {
     background-color: #181B18
 }
 
-#wrapper {
+#wrapper__bg {
     position: absolute;
     top: 0;
     left: 0;
