@@ -229,7 +229,7 @@ function drawChartBenchmark(type) {
 		.attr('y', yScale(data[data.length - 1]['be']) - 8)
 		.attr('class', 'chartLabel sm caps primary-70')
 		.attr('opacity', 0)
-		.text('b(e)');
+		.text('b(e) Score');
 
 	svg
 		.append('text')
@@ -238,7 +238,7 @@ function drawChartBenchmark(type) {
 		.attr('y', yScale(data[data.length - 1]['altman']) - 8)
 		.attr('class', 'chartLabel sm caps')
 		.attr('opacity', 0)
-		.text('Altman');
+		.text('Z-Score');
 
 	let auditorNudge = -8;
 
@@ -253,7 +253,7 @@ function drawChartBenchmark(type) {
 		.attr('y', yScale(data[data.length - 1]['auditor']) + auditorNudge)
 		.attr('class', 'chartLabel sm caps')
 		.attr('opacity', 0)
-		.text('Auditor');
+		.text('Going Concern');
 
 	svg
 		.append('text')
@@ -269,7 +269,7 @@ function drawChartBenchmark(type) {
 		.attr('x', svgWidth + svgMargin.right)
 		.attr('y', svgHeight + svgMargin.bottom - 3)
 		.attr('class', 'axisLabel')
-		.text('Number of months before Target Date');
+		.text('Number of months before Target Date¹');
 
 	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
 	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');

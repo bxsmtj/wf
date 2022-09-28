@@ -243,3 +243,9 @@ body:not(:-moz-handler-blocked) fieldset {
 .chartLabel.primary-70 {
   fill: #A3C2A3;
 }
+
+.text__superscript {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
