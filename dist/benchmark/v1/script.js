@@ -1,4 +1,5 @@
 gsap.registerPlugin(ScrollTrigger);
+const counterUp = window.counterUp.default;
 idWrapper = '#wrapper__chart-benchmark';
 const dataRaw = [
 	{
@@ -283,6 +284,7 @@ function clearChartBenchmark() {
 }
 
 function formatPercent(num) {
+	// return parseInt(num * 100);
 	return d3.format('.0%')(num);
 }
 
@@ -292,6 +294,14 @@ function setBenchmarkStats(statistic, type) {
 
 	el12.innerText = formatPercent(data12[statistic + '_' + type]);
 	el24.innerText = formatPercent(data24[statistic + '_' + type]);
+
+	counterUp(el12, {
+		duration: 500,
+	});
+
+	counterUp(el24, {
+		duration: 500,
+	});
 }
 
 $(document).ready(function () {
@@ -336,7 +346,7 @@ $(document).ready(function () {
 
 $(window).on('load', function () {
 	svgWidth = $(idWrapper).width() - svgMargin.left - svgMargin.right;
-	svgHeight = $(idWrapper).width() / 2 - svgMargin.top - svgMargin.bottom;
+	svgHeight = $(idWrapper).height() - svgMargin.top - svgMargin.bottom;
 
 	drawChartBenchmark('accuracy');
 

@@ -143,35 +143,40 @@ body:not(:-moz-handler-blocked) fieldset {
   display: table-cell;
 }
 
-#radio__statistic input[type="radio"] {
+.radio__fieldset input[type="radio"] {
   opacity: 0;
   position: fixed;
   width: 0;
-  
 }
 
-#radio__statistic label {
+.radio__fieldset label {
   display: inline-block;
-  border-radius: 2px;
   padding: 4px 8px;
+  margin: 0;
+  font-weight: 400;
 }
 
-#radio__statistic input[type="radio"]:checked+label {
+.radio__fieldset input[type="radio"]:checked+label {
   background-color: rgba(179,179,179,0.1);
   border-color: #4D4D4D;
 }
 
-#radio__statistic input[type="radio"]:focus+label {
-    background-color: rgba(179, 179, 179, 0.1);
+.radio__fieldset input[type="radio"]:focus+label {
+  background-color: rgba(179, 179, 179, 0.1);
 }
 
-#radio__statistic label:hover {
+.radio__fieldset label:hover {
   cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   background-color: rgba(179, 179, 179, 0.2);
   transition: all 250ms;
 }
 
 .radio__btn {
+  border-radius: 2px;
   border-top: 1px solid #4D4D4D;
   border-right: 1px solid #4D4D4D;
   border-bottom: 1px solid #4D4D4D;
