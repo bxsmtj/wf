@@ -239,3 +239,7 @@ body:not(:-moz-handler-blocked) fieldset {
 .chartLabel.primary {
   fill: #8CA68C;
 }
+
+.chartLabel.primary-70 {
+  fill: #A3C2A3;
+}

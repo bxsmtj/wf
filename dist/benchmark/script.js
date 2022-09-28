@@ -199,7 +199,7 @@ function drawChartBenchmark(type) {
 		.append('path')
 		.attr('d', lineBe(data))
 		.attr('fill', 'none')
-		.attr('stroke', '#B3B3B3')
+		.attr('stroke', '#A3C2A3')
 		.attr('stroke-width', 2);
 
 	let pathAltman = svg
@@ -221,6 +221,39 @@ function drawChartBenchmark(type) {
 	let totalLengthBe = pathBe.node().getTotalLength();
 	let totalLengthAltman = pathAltman.node().getTotalLength();
 	let totalLengthAuditor = pathAuditor.node().getTotalLength();
+
+	svg
+		.append('text')
+		.attr('text-anchor', 'end')
+		.attr('x', svgWidth)
+		.attr('y', yScale(data[data.length - 1]['be']) - 8)
+		.attr('class', 'chartLabel sm caps primary-70')
+		.attr('opacity', 0)
+		.text('b(e)');
+
+	svg
+		.append('text')
+		.attr('text-anchor', 'end')
+		.attr('x', svgWidth)
+		.attr('y', yScale(data[data.length - 1]['altman']) - 8)
+		.attr('class', 'chartLabel sm caps')
+		.attr('opacity', 0)
+		.text('Altman');
+
+	let auditorNudge = -8;
+
+	if (type == 'accuracy') {
+		auditorNudge = +16;
+	}
+
+	svg
+		.append('text')
+		.attr('text-anchor', 'end')
+		.attr('x', svgWidth)
+		.attr('y', yScale(data[data.length - 1]['auditor']) + auditorNudge)
+		.attr('class', 'chartLabel sm caps')
+		.attr('opacity', 0)
+		.text('Auditor');
 
 	svg
 		.append('text')
@@ -276,6 +309,12 @@ function drawChartBenchmark(type) {
 				.duration(1000)
 				.ease(d3.easeCubicInOut)
 				.attr('stroke-dashoffset', 0);
+
+			svg
+				.selectAll('.chartLabel')
+				.transition()
+				.duration(1000)
+				.attr('opacity', 1);
 		},
 	});
 }
@@ -300,7 +339,7 @@ function setBenchmarkStats(statistic, type) {
 $(document).ready(function () {
 	div = document.getElementById('wrapper__bg');
 	width = div.clientWidth;
-	console.log(width);
+
 	setBenchmarkStats('accuracy', 'be', 'wrapper__be-12', 'wrapper__be-24');
 	setBenchmarkStats(
 		'accuracy',
