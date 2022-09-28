@@ -94,6 +94,8 @@ body {
     margin: 0;
 }
 
+.h1 {font-size: 96px}
+
 .bg-color {
 background-color: gray
 }

@@ -8,8 +8,10 @@ $(document).ready(function () {
 		let mySplitText;
 		function createSplits() {
 			mySplitText = new SplitText(myText, {
-				type: 'chars',
+				type: 'chars,words,lines',
 				charsClass: 'split-chars',
+				wordsClass: 'split-words',
+				linesClass: 'split-lines',
 			});
 		}
 		createSplits();
