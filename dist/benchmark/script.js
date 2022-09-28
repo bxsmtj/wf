@@ -1,7 +1,6 @@
-gsap.registerPlugin(ScrollTrigger);
-let div;
-let width;
-
+// gsap.registerPlugin(ScrollTrigger);
+// let div;
+// let width;
 idWrapper = '#wrapper__chart-benchmark';
 const dataRaw = [
 	{
