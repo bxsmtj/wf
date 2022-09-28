@@ -1,5 +1,7 @@
 gsap.registerPlugin(ScrollTrigger);
-let width = div.clientWidth;
+let div;
+let width;
+
 idWrapper = '#wrapper__chart-benchmark';
 const dataRaw = [
 	{
@@ -297,7 +299,9 @@ function setBenchmarkStats(statistic, type) {
 }
 
 $(document).ready(function () {
+	div = document.getElementById('wrapper__bg');
 	width = div.clientWidth;
+	console.log(width);
 	setBenchmarkStats('accuracy', 'be', 'wrapper__be-12', 'wrapper__be-24');
 	setBenchmarkStats(
 		'accuracy',
@@ -349,9 +353,13 @@ $(window).on('load', function () {
 
 	window.addEventListener('resize', () => {
 		svgWidth = $(idWrapper).width() - svgMargin.left - svgMargin.right;
-		svgHeight = $(idWrapper).width() / 2 - svgMargin.top - svgMargin.bottom;
+		if (width >= 991) {
+			svgHeight = $(idWrapper).height() - svgMargin.top - svgMargin.bottom;
+		} else {
+			svgHeight = $(idWrapper).width() / 2 - svgMargin.top - svgMargin.bottom;
+		}
 
 		clearChartBenchmark();
-		drawChartBenchmark($('#toggle__statistic input:radio').val());
+		drawChartBenchmark($('#radio__statistic input:radio').val());
 	});
 });
