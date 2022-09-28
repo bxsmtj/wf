@@ -3392,7 +3392,7 @@ function drawChart(type) {
 			} else if (yDomainMax > 100) {
 				stepValue = 40;
 			} else if (yDomainMax > 10) {
-				stepValue = 10;
+				stepValue = 20;
 			} else {
 				stepValue = 2;
 			}
