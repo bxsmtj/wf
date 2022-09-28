@@ -269,7 +269,7 @@ function drawChartBenchmark(type) {
 		.attr('x', svgWidth + svgMargin.right)
 		.attr('y', svgHeight + svgMargin.bottom - 3)
 		.attr('class', 'axisLabel')
-		.text('Number of months before Target Date¹');
+		.text('Number of months before Target Date' + '\u00B9');
 
 	svg.selectAll('.tick').selectAll('text').attr('class', 'axisLabel');
 	svg.selectAll('.tick').selectAll('line').attr('class', 'axisDomain');
