@@ -154,7 +154,9 @@ function drawChartBenchmark(type) {
 		.axisLeft(yScale)
 		.tickSize(-svgWidth)
 		.tickPadding([8])
-		.tickFormat(d3.format('.0%'));
+		.tickFormat(d3.format('.0%'))
+		.ticks(5)
+		.tickValues(d3.range(0, 1 + 0.2, 0.2));
 
 	svg.append('g').call(yAxis);
 
@@ -200,22 +202,22 @@ function drawChartBenchmark(type) {
 		.attr('d', lineBe(data))
 		.attr('fill', 'none')
 		.attr('stroke', '#A3C2A3')
-		.attr('stroke-width', 2);
+		.attr('stroke-width', 1);
 
 	let pathAltman = svg
 		.append('path')
 		.attr('d', lineAltman(data))
 		.attr('fill', 'none')
-		.attr('stroke', '#B3B3B3')
-		.attr('stroke-width', 2)
+		.attr('stroke', '#EA8E7B')
+		.attr('stroke-width', 1)
 		.attr('mask', 'url(#maskDashed)');
 
 	let pathAuditor = svg
 		.append('path')
 		.attr('d', lineAuditor(data))
 		.attr('fill', 'none')
-		.attr('stroke', '#B3B3B3')
-		.attr('stroke-width', 2)
+		.attr('stroke', '#EA8E7B')
+		.attr('stroke-width', 1)
 		.attr('mask', 'url(#maskDotted)');
 
 	let totalLengthBe = pathBe.node().getTotalLength();
@@ -236,7 +238,7 @@ function drawChartBenchmark(type) {
 		.attr('text-anchor', 'end')
 		.attr('x', svgWidth)
 		.attr('y', yScale(data[data.length - 1]['altman']) - 8)
-		.attr('class', 'chartLabel sm caps')
+		.attr('class', 'chartLabel sm caps red-70')
 		.attr('opacity', 0)
 		.text('Z-Score');
 
@@ -251,7 +253,7 @@ function drawChartBenchmark(type) {
 		.attr('text-anchor', 'end')
 		.attr('x', svgWidth)
 		.attr('y', yScale(data[data.length - 1]['auditor']) + auditorNudge)
-		.attr('class', 'chartLabel sm caps')
+		.attr('class', 'chartLabel sm caps red-70')
 		.attr('opacity', 0)
 		.text('Going Concern');
 
