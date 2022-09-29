@@ -3326,6 +3326,8 @@ function drawChart(type) {
 			'translate(' + svgMargin.left + ',' + svgMargin.top + ')'
 		);
 
+	let defs = svg.append('defs');
+
 	let xScale = d3
 		.scaleTime()
 		.domain(
@@ -3458,7 +3460,7 @@ function drawChart(type) {
 
 			svg
 				.append('g')
-				.attr('class', 'axisLabelSecondary')
+				.attr('class', 'axisLabel')
 				.attr('transform', 'translate(' + svgWidth + ', 0)')
 				.call(yAxisSecondary);
 
@@ -3467,10 +3469,32 @@ function drawChart(type) {
 				.attr('text-anchor', 'end')
 				.attr('x', svgWidth + svgMargin.right)
 				.attr('y', -svgMargin.top / 2)
-				.attr('class', 'axisLabelSecondary')
+				.attr('class', 'axisLabel')
 				.text('Short Interest');
 
-			d3.line()
+			svg
+				.append('line')
+				.attr('x1', svgWidth + svgMargin.right - 112)
+				.attr('y1', -svgMargin.top / 2 - 4)
+				.attr('x2', svgWidth + svgMargin.right - 128)
+				.attr('y2', -svgMargin.top / 2 - 4)
+				.attr('fill', 'none')
+				.attr('stroke', '#B3B3B3')
+				.attr('stroke-width', 1)
+				.attr('stroke-dasharray', '2 2');
+
+			svg
+				.append('line')
+				.attr('x1', -svgMargin.left + 124)
+				.attr('y1', -svgMargin.top / 2 - 4)
+				.attr('x2', -svgMargin.left + 140)
+				.attr('y2', -svgMargin.top / 2 - 4)
+				.attr('fill', 'none')
+				.attr('stroke', '#B3B3B3')
+				.attr('stroke-width', 1);
+
+			let lineGeneratorSecondary = d3
+				.line()
 				.x(function (d) {
 					return xScale(d.date);
 				})
@@ -3481,12 +3505,23 @@ function drawChart(type) {
 					return d.value !== null;
 				});
 
+			defs
+				.append('mask')
+				.attr('id', 'maskDotted')
+				.append('path')
+				.attr('d', lineGeneratorSecondary(dataSecondary))
+				.attr('fill', 'none')
+				.attr('stroke', 'white')
+				.attr('stroke-width', 2)
+				.attr('stroke-dasharray', '2 2');
+
 			let pathSecondary = svg
 				.append('path')
-				.attr('d', line(dataSecondary))
+				.attr('d', lineGeneratorSecondary(dataSecondary))
 				.attr('fill', 'none')
-				.attr('stroke', '#808080')
-				.attr('stroke-width', 1);
+				.attr('stroke', '#B3B3B3')
+				.attr('stroke-width', 1)
+				.attr('mask', 'url(#maskDotted)');
 
 			let totalLengthSecondary = pathSecondary.node().getTotalLength();
 
