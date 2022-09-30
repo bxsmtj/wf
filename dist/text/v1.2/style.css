@@ -104,15 +104,25 @@ background-color: gray
   color: white;
 }
 
+.split {
+  font-kerning: none;
+  -webkit-text-rendering: optimizeSpeed;
+  text-rendering: optimizeSpeed;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
 /* custom cursor animation */
 .cursor__static::after {
   content: "_";
-  display: inline;
+  display: inline-block;
+  width: 0px;
 }
 
 .cursor__blink::after {
   content: "_";
-  display: inline;
+  display: inline-block;
+  width: 0px;
   animation: blink 1s infinite;
 }
 

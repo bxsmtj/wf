@@ -25,6 +25,8 @@ $('.split').each(function () {
 });
 // }, 200);
 
+function initializeUnderscore() {}
+
 function initializeTypedAnimationsH() {
 	$('.typed--h').each(function () {
 		let triggerElement = $(this);
@@ -43,16 +45,21 @@ function initializeTypedAnimationsH() {
 			stagger: {
 				each: 0.05,
 				from: '0',
-				// onStart: function () {
-				// 	$(this.targets()[0]).addClass('cursor__static');
-				// },
-				// onComplete: function () {
-				// 	$(this.targets()[0]).removeClass('cursor__static');
-				// },
+				onStart: function () {
+					// let target = this.targets()[0];
+					// let x = target.offsetLeft + target.offsetWidth;
+					// let y = target.offsetTop + target.offsetHeight;
+					// console.log('x:' + x);
+					// console.log('y:' + y);
+					$(this.targets()[0]).addClass('cursor__static');
+				},
+				onComplete: function () {
+					$(this.targets()[0]).removeClass('cursor__static');
+				},
 			},
-			// onComplete: function () {
-			// 	$(this.targets()[this.targets().length - 1]).addClass('cursor__blink');
-			// },
+			onComplete: function () {
+				$(this.targets()[this.targets().length - 1]).addClass('cursor__blink');
+			},
 		});
 	});
 }
