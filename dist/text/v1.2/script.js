@@ -38,7 +38,7 @@ function initializeTypedAnimationsH() {
 		tl.from(targetElement, {
 			duration: 0.02,
 			y: '0%',
-			opacity: 0.05,
+			opacity: 0,
 			ease: 'power1.none',
 			stagger: {
 				each: 0.05,
