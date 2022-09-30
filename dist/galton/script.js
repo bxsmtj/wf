@@ -1,10 +1,7 @@
-let windowWidth = window.innerWidth;
-let windowHeight = window.innerHeight;
-
-window.addEventListener('resize', function () {
-	width = window.innerWidth;
-	height = window.innerHeight;
-});
+// let windowWidth = window.innerWidth;
+// window.addEventListener('resize', function () {
+// 	width = window.innerWidth;
+// });
 
 function drawGalton(elementId) {
 	let Engine = Matter.Engine,
