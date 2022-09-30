@@ -2,30 +2,28 @@ let windowWidth = window.outerWidth;
 gsap.registerPlugin(SplitText);
 gsap.registerPlugin(ScrollTrigger);
 
-// setTimeout(function () {
-$('.split').each(function () {
-	let myText = $(this);
-	let mySplitText;
-	function createSplits() {
-		mySplitText = new SplitText(myText, {
-			type: 'chars,words,lines',
-			charsClass: 'split-chars',
-			wordsClass: 'split-words',
-			linesClass: 'split-lines',
-		});
-	}
-	createSplits();
-	$(window).resize(function () {
-		if (window.outerWidth !== windowWidth) {
-			mySplitText.revert();
-			location.reload();
+setTimeout(function () {
+	$('.split').each(function () {
+		let myText = $(this);
+		let mySplitText;
+		function createSplits() {
+			mySplitText = new SplitText(myText, {
+				type: 'chars,words,lines',
+				charsClass: 'split-chars',
+				wordsClass: 'split-words',
+				linesClass: 'split-lines',
+			});
 		}
-		windowWidth = window.outerWidth;
+		createSplits();
+		$(window).resize(function () {
+			if (window.outerWidth !== windowWidth) {
+				mySplitText.revert();
+				location.reload();
+			}
+			windowWidth = window.outerWidth;
+		});
 	});
-});
-// }, 200);
-
-function initializeUnderscore() {}
+}, 200);
 
 function initializeTypedAnimationsH() {
 	$('.typed--h').each(function () {
@@ -40,17 +38,12 @@ function initializeTypedAnimationsH() {
 		tl.from(targetElement, {
 			duration: 0.02,
 			y: '0%',
-			opacity: 0.01,
+			opacity: 0.05,
 			ease: 'power1.none',
 			stagger: {
 				each: 0.05,
 				from: '0',
 				onStart: function () {
-					// let target = this.targets()[0];
-					// let x = target.offsetLeft + target.offsetWidth;
-					// let y = target.offsetTop + target.offsetHeight;
-					// console.log('x:' + x);
-					// console.log('y:' + y);
 					$(this.targets()[0]).addClass('cursor__static');
 				},
 				onComplete: function () {
@@ -78,10 +71,10 @@ function initializeTypedAnimationsP() {
 			delay: 0.5,
 			y: '0%',
 			duration: 0.02,
-			opacity: 0.1,
+			opacity: 0.2,
 			ease: 'power1.none',
 			stagger: {
-				each: 0.05,
+				each: 0.025,
 				from: '0',
 			},
 		});
@@ -89,10 +82,10 @@ function initializeTypedAnimationsP() {
 }
 
 $(document).ready(function () {
-	// setTimeout(function () {
-	initializeTypedAnimationsH();
-	initializeTypedAnimationsP();
-	// }, 250);
+	setTimeout(function () {
+		initializeTypedAnimationsH();
+		initializeTypedAnimationsP();
+	}, 250);
 
 	const resizeElements = document.querySelectorAll('.section');
 	const resizeObserver = new ResizeObserver((entries) => {
