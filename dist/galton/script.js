@@ -25,7 +25,7 @@ function drawGalton(elementId) {
 			width: 520,
 			height: 347,
 			wireframes: false,
-			background: '#181B18',
+			background: '#1C1E1C',
 			hasBounds: true,
 		},
 	});
@@ -36,7 +36,7 @@ function drawGalton(elementId) {
 	let runner = Runner.create();
 	Runner.run(runner, engine);
 
-	const size = 4;
+	const size = 5;
 
 	// add bodies
 	let total = 1400;
