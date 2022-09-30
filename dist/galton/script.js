@@ -6,17 +6,8 @@ window.addEventListener('resize', function () {
 	height = window.innerHeight;
 });
 
-function percentX(percent) {
-	return Math.round((percent / 100) * windowWidth);
-}
-function percentY(percent) {
-	return Math.round((percent / 100) * windowHeight);
-}
-
-var Example = Example || {};
-
-Example.galton = function () {
-	var Engine = Matter.Engine,
+function drawGalton(elementId) {
+	let Engine = Matter.Engine,
 		Render = Matter.Render,
 		Runner = Matter.Runner,
 		World = Matter.World,
@@ -24,21 +15,18 @@ Example.galton = function () {
 	Bounds = Matter.Bounds;
 
 	// create engine
-	var engine = Engine.create({
+	let engine = Engine.create({
 			enableSleeping: true,
 		}),
 		world = engine.world;
 
 	// create renderer
-	var render = Render.create({
-		// element: document.body,
-		element: document.getElementById('wrapper__galton-1'),
+	let render = Render.create({
+		element: document.getElementById(elementId),
 		engine: engine,
 		options: {
 			width: 520,
 			height: 347,
-			// width: percentX(100),
-			// height: (percentX(100) / 3) * 2,
 			wireframes: false,
 			background: '#181B18',
 			hasBounds: true,
@@ -48,7 +36,7 @@ Example.galton = function () {
 	Render.run(render);
 
 	// create runner
-	var runner = Runner.create();
+	let runner = Runner.create();
 	Runner.run(runner, engine);
 
 	const size = 4;
@@ -85,7 +73,7 @@ Example.galton = function () {
 	const pegs = [];
 	const spacingY = 35;
 	const spacingX = 40;
-	var i, j, lastI;
+	let i, j, lastI;
 	for (i = 0; i < 13; i++) {
 		for (j = 1; j < i; j++) {
 			pegs.push(
@@ -139,7 +127,11 @@ Example.galton = function () {
 
 	World.add(world, pegs);
 
-	Bounds.translate(render.bounds, { x: 0, y: 800 - 347 });
+	if (elementId == 'wrapper__galton-1') {
+		Bounds.translate(render.bounds, { x: 0, y: 800 - 347 - 173.5 });
+	} else if (elementId == 'wrapper__galton-2') {
+		Bounds.translate(render.bounds, { x: 0, y: 800 - 347 });
+	}
 
 	return {
 		engine: engine,
@@ -151,6 +143,7 @@ Example.galton = function () {
 			Matter.Runner.stop(runner);
 		},
 	};
-};
+}
 
-Example.galton();
+drawGalton('wrapper__galton-1');
+drawGalton('wrapper__galton-2');
