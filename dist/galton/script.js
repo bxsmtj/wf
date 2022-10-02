@@ -27,6 +27,7 @@ function drawGalton(elementId) {
 			wireframes: false,
 			background: '#1C1E1C',
 			hasBounds: true,
+			showSleeping: false,
 		},
 	});
 
@@ -54,7 +55,7 @@ function drawGalton(elementId) {
 					frictionAir: 0.042,
 					sleepThreshold: 25,
 					render: {
-						fillStyle: '#ffffff',
+						fillStyle: '#E0EBE0',
 						visible: true,
 					},
 				}
@@ -125,7 +126,7 @@ function drawGalton(elementId) {
 	World.add(world, pegs);
 
 	if (elementId == 'wrapper__galton-1') {
-		Bounds.translate(render.bounds, { x: 0, y: 800 - 347 - 173.5 });
+		Bounds.translate(render.bounds, { x: 0, y: 800 - 347 - 173.5});
 	} else if (elementId == 'wrapper__galton-2') {
 		Bounds.translate(render.bounds, { x: 0, y: 800 - 347 });
 	}
