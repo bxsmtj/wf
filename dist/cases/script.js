@@ -3645,17 +3645,79 @@ function drawChart(type) {
 				.attr('stroke', color)
 				.attr('stroke-dasharray', '4 4');
 
-			svg
-				.append('g')
-				.append('text')
-				.attr('class', `${alertName} chartLabel sm caps ${alertLabelClass}`)
-				.attr('x', xTypeAlert - 4)
-				.attr('y', 0)
-				.attr('text-anchor', 'end')
-				.attr('transform-origin', `${xTypeAlert - 4} 0`)
-				.attr('transform', 'rotate(-90)')
-				.attr('opacity', 0)
-				.text(alertLabel);
+			if (svgWidth < 478) {
+				if (type == 'be') {
+					if (xTypeAlert < 70) {
+						svg
+							.append('g')
+							.append('text')
+							.attr(
+								'class',
+								`${alertName} chartLabel sm caps ${alertLabelClass}`
+							)
+							.attr('x', xTypeAlert + 4)
+							.attr('text-anchor', 'start')
+							.attr('y', 8)
+							.attr('opacity', 0)
+							.text(alertLabel);
+					} else {
+						svg
+							.append('g')
+							.append('text')
+							.attr(
+								'class',
+								`${alertName} chartLabel sm caps ${alertLabelClass}`
+							)
+							.attr('x', xTypeAlert - 4)
+							.attr('text-anchor', 'end')
+							.attr('y', 8)
+							.attr('opacity', 0)
+							.text(alertLabel);
+					}
+				} else {
+					let beAlertPosition = svg.selectAll('.beAlert.chartLabel').attr('x');
+
+					if (xTypeAlert - beAlertPosition < 140 || xTypeAlert == svgWidth) {
+						svg
+							.append('g')
+							.append('text')
+							.attr(
+								'class',
+								`${alertName} chartLabel sm caps ${alertLabelClass}`
+							)
+							.attr('x', xTypeAlert - 4)
+							.attr('text-anchor', 'end')
+							.attr('y', 20)
+							.attr('opacity', 0)
+							.text(alertLabel);
+					} else {
+						svg
+							.append('g')
+							.append('text')
+							.attr(
+								'class',
+								`${alertName} chartLabel sm caps ${alertLabelClass}`
+							)
+							.attr('x', xTypeAlert - 4)
+							.attr('text-anchor', 'end')
+							.attr('y', 8)
+							.attr('opacity', 0)
+							.text(alertLabel);
+					}
+				}
+			} else {
+				svg
+					.append('g')
+					.append('text')
+					.attr('class', `${alertName} chartLabel sm caps ${alertLabelClass}`)
+					.attr('x', xTypeAlert - 4)
+					.attr('y', 0)
+					.attr('text-anchor', 'end')
+					.attr('transform-origin', `${xTypeAlert - 4} 0`)
+					.attr('transform', 'rotate(-90)')
+					.attr('opacity', 0)
+					.text(alertLabel);
+			}
 		}
 	}
 
