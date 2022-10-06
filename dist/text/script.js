@@ -23,7 +23,7 @@ setTimeout(function () {
 			windowWidth = window.outerWidth;
 		});
 	});
-}, 200);
+}, 20);
 
 function initializeTypedAnimationsH() {
 	$('.typed--h').each(function () {
@@ -85,7 +85,7 @@ $(document).ready(function () {
 	setTimeout(function () {
 		initializeTypedAnimationsH();
 		initializeTypedAnimationsP();
-	}, 250);
+	}, 50);
 
 	const resizeElements = document.querySelectorAll('.section');
 	const resizeObserver = new ResizeObserver((entries) => {
